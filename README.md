@@ -58,6 +58,3 @@
 *   `SalesAI.Infrastructure`: Database context, Hangfire configuration, Gemini AI service implementations.
 *   `SalesAI.API`: Controllers, Middlewares, and Program configuration.
 *   `SalesAI.UI`: Angular 19 SPA powered by Tailwind CSS.
-
----
-*Built with ❤️ and AI.*
