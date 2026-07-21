@@ -1,0 +1,59 @@
+# .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.sln.ide/
+.vs/
+packages/
+*.nupkg
+project.lock.json
+
+# User secrets
+secrets.json
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+
+# NuGet
+**/[Pp]ackages/*
+!**/[Pp]ackages/build/
+*.nupkg
+**/packages/*
+
+# Angular
+salesai-client/node_modules/
+salesai-client/dist/
+salesai-client/.angular/
+salesai-client/.cache/
+
+# IDE
+.idea/
+*.swp
+*.swo
+*~
+.vscode/settings.json
+
+# Docker
+docker-compose.override.yml
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+*.env.local
+
+# Logs
+logs/
+*.log
+
+# Coverage
+coverage/
+TestResults/

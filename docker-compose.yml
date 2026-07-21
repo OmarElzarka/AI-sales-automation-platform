@@ -1,0 +1,44 @@
+version: '3.8'
+
+services:
+  salesai-api:
+    build:
+      context: .
+      dockerfile: src/SalesAI.API/Dockerfile
+    ports:
+      - "5000:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ConnectionStrings__DefaultConnection=Server=sqlserver;Database=SalesAI;User=sa;Password=SalesAI_Dev_2026!;TrustServerCertificate=true
+      - JwtSettings__Secret=SalesAI-Super-Secret-Key-For-Development-Must-Be-At-Least-32-Chars!
+      - GeminiApi__ApiKey=${GEMINI_API_KEY}
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+    networks:
+      - salesai-network
+
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=SalesAI_Dev_2026!
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver-data:/var/opt/mssql
+    healthcheck:
+      test: /opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P "SalesAI_Dev_2026!" -Q "SELECT 1" -C -b
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - salesai-network
+
+volumes:
+  sqlserver-data:
+
+networks:
+  salesai-network:
+    driver: bridge

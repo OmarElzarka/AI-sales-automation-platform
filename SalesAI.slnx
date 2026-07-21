@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/SalesAI.API/SalesAI.API.csproj" />
+    <Project Path="src/SalesAI.Application/SalesAI.Application.csproj" />
+    <Project Path="src/SalesAI.Domain/SalesAI.Domain.csproj" />
+    <Project Path="src/SalesAI.Infrastructure/SalesAI.Infrastructure.csproj" />
+  </Folder>
+</Solution>
