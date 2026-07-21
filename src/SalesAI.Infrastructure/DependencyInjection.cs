@@ -94,6 +94,13 @@ public static class DependencyInjection
         {
             x.AddConsumer<SalesAI.Application.Features.Leads.Consumers.LeadCreatedConsumer>();
             var rabbitHost = configuration["MessageBroker:Host"];
+            var rabbitPortStr = configuration["MessageBroker:Port"];
+            ushort rabbitPort = 5672;
+            if (!string.IsNullOrEmpty(rabbitPortStr) && ushort.TryParse(rabbitPortStr, out var parsedPort))
+            {
+                rabbitPort = parsedPort;
+            }
+
             if (!string.IsNullOrEmpty(rabbitHost))
             {
                 x.UsingRabbitMq((context, cfg) =>
@@ -101,7 +108,7 @@ public static class DependencyInjection
                     var username = configuration["MessageBroker:Username"] ?? "guest";
                     var password = configuration["MessageBroker:Password"] ?? "guest";
                     
-                    cfg.Host(rabbitHost, "/", h =>
+                    cfg.Host(rabbitHost, rabbitPort, "/", h =>
                     {
                         h.Username(username);
                         h.Password(password);
