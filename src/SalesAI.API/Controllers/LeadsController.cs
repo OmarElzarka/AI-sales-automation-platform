@@ -106,4 +106,15 @@ public class LeadsController : ControllerBase
 
         return Ok(result.Data);
     }
+
+    [HttpGet("{id}/timeline")]
+    public async Task<ActionResult<List<TimelineItemDto>>> GetLeadTimeline(Guid id)
+    {
+        var result = await _mediator.Send(new GetLeadTimelineQuery(id));
+        
+        if (!result.Succeeded)
+            return BadRequest(new { result.Message });
+
+        return Ok(result.Data);
+    }
 }
