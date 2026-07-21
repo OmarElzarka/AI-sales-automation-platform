@@ -111,7 +111,7 @@ When the backend is running in the Development environment, the Swagger UI is av
 
 **Internal Dashboard (SalesAI.UI):**
 ```bash
-cd sales-ai.ui
+cd src/SalesAI.UI
 npm install
 npm start
 ```
@@ -119,7 +119,7 @@ The application will be accessible at `http://localhost:4200`.
 
 **Public Web Interface (SalesAI.PublicWeb):**
 ```bash
-cd sales-ai.public-web
+cd src/SalesAI.PublicWeb
 npm install
 npm start -- --port 4201
 ```
