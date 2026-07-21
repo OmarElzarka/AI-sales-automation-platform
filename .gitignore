@@ -31,6 +31,13 @@ salesai-client/node_modules/
 salesai-client/dist/
 salesai-client/.angular/
 salesai-client/.cache/
+src/SalesAI.UI/node_modules/
+src/SalesAI.UI/dist/
+src/SalesAI.UI/.angular/
+src/SalesAI.PublicWeb/node_modules/
+src/SalesAI.PublicWeb/dist/
+src/SalesAI.PublicWeb/.angular/
+node_modules/
 
 # IDE
 .idea/

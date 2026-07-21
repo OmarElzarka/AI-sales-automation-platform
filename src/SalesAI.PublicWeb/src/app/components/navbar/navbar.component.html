@@ -1,0 +1,35 @@
+<nav class="navbar" [class.scrolled]="isScrolled">
+  <div class="nav-container container">
+    <a routerLink="/" class="logo" (click)="closeMobileMenu()">
+      <div class="logo-icon">
+        <svg width="28" height="28" viewBox="0 0 32 32" fill="none">
+          <defs>
+            <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#7c3aed"/>
+              <stop offset="100%" stop-color="#06b6d4"/>
+            </linearGradient>
+          </defs>
+          <path d="M16 2L28 9V23L16 30L4 23V9L16 2Z" fill="url(#logoGrad)" opacity="0.9"/>
+          <path d="M16 8L22 11.5V18.5L16 22L10 18.5V11.5L16 8Z" fill="#0a0f1c" opacity="0.6"/>
+          <circle cx="16" cy="15" r="3" fill="white" opacity="0.9"/>
+        </svg>
+      </div>
+      <span class="logo-text">NovaFlow</span>
+    </a>
+
+    <div class="nav-links" [class.open]="isMobileMenuOpen">
+      <a routerLink="/" fragment="features" class="nav-link" (click)="closeMobileMenu()">Features</a>
+      <a routerLink="/" fragment="pricing" class="nav-link" (click)="closeMobileMenu()">Pricing</a>
+      <a routerLink="/" fragment="how-it-works" class="nav-link" (click)="closeMobileMenu()">How It Works</a>
+      <a routerLink="/contact" class="nav-link" (click)="closeMobileMenu()">Contact</a>
+      <a routerLink="/book-demo" class="nav-link" (click)="closeMobileMenu()">Book a Demo</a>
+      <button class="btn btn-primary btn-sm nav-cta" (click)="requestDemo()">Request Demo</button>
+    </div>
+
+    <button class="mobile-toggle" (click)="toggleMobileMenu()" [attr.aria-label]="isMobileMenuOpen ? 'Close menu' : 'Open menu'">
+      <span [class.open]="isMobileMenuOpen"></span>
+      <span [class.open]="isMobileMenuOpen"></span>
+      <span [class.open]="isMobileMenuOpen"></span>
+    </button>
+  </div>
+</nav>

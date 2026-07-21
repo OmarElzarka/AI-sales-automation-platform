@@ -1,0 +1,109 @@
+<section class="contact-page">
+  <div class="page-glow"></div>
+  <div class="container">
+    <div class="page-header animate-fade-in-up">
+      <div class="section-badge">📬 Contact Us</div>
+      <h1>Get in Touch<br><span class="gradient-text">With Our Team</span></h1>
+      <p>Have questions? We're here to help. Choose the right department and we'll get back to you within 24 hours.</p>
+    </div>
+
+    <div class="contact-layout animate-fade-in-up delay-200">
+      <!-- Left: Info Cards -->
+      <div class="contact-info">
+        <div class="info-card">
+          <div class="info-icon">📧</div>
+          <h3>Email Us</h3>
+          <p>hello&#64;novaflow.io</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">📞</div>
+          <h3>Call Us</h3>
+          <p>+1 (555) 123-4567</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">📍</div>
+          <h3>Visit Us</h3>
+          <p>100 Innovation Drive<br>San Francisco, CA 94105</p>
+        </div>
+        <div class="info-card">
+          <div class="info-icon">💬</div>
+          <h3>Live Chat</h3>
+          <p>Available Mon-Fri, 9am-6pm PST</p>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div class="contact-form-card card">
+        <!-- Tabs -->
+        <div class="inquiry-tabs">
+          <button
+            class="tab-btn"
+            [class.active]="activeTab === 'general'"
+            (click)="setTab('general')">General</button>
+          <button
+            class="tab-btn"
+            [class.active]="activeTab === 'sales'"
+            (click)="setTab('sales')">Sales</button>
+          <button
+            class="tab-btn"
+            [class.active]="activeTab === 'support'"
+            (click)="setTab('support')">Support</button>
+        </div>
+
+        <!-- Success -->
+        <div *ngIf="isSuccess" class="success-view">
+          <div class="success-icon-sm">✓</div>
+          <h3>Message Sent!</h3>
+          <p>{{ successMessage }}</p>
+          <button class="btn btn-secondary" (click)="isSuccess = false">Send Another</button>
+        </div>
+
+        <!-- Form -->
+        <form *ngIf="!isSuccess" (ngSubmit)="submitForm()" class="contact-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="contactFirstName">First Name *</label>
+              <input id="contactFirstName" type="text" class="form-input" [(ngModel)]="form.firstName" name="firstName" placeholder="John" required>
+            </div>
+            <div class="form-group">
+              <label for="contactLastName">Last Name *</label>
+              <input id="contactLastName" type="text" class="form-input" [(ngModel)]="form.lastName" name="lastName" placeholder="Doe" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label for="contactEmail">Email *</label>
+              <input id="contactEmail" type="email" class="form-input" [(ngModel)]="form.email" name="email" placeholder="john@company.com" required>
+            </div>
+            <div class="form-group">
+              <label for="contactPhone">Phone</label>
+              <input id="contactPhone" type="tel" class="form-input" [(ngModel)]="form.phone" name="phone" placeholder="+1 (555) 000-0000">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="contactCompany">Company</label>
+            <input id="contactCompany" type="text" class="form-input" [(ngModel)]="form.company" name="company" placeholder="Acme Inc.">
+          </div>
+
+          <div class="form-group">
+            <label for="contactSubject">Subject *</label>
+            <input id="contactSubject" type="text" class="form-input" [(ngModel)]="form.subject" name="subject" placeholder="How can we help?" required>
+          </div>
+
+          <div class="form-group">
+            <label for="contactMessage">Message *</label>
+            <textarea id="contactMessage" class="form-textarea" [(ngModel)]="form.message" name="message" placeholder="Tell us more..." rows="5" required></textarea>
+          </div>
+
+          <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
+
+          <button type="submit" class="btn btn-primary btn-lg" [disabled]="isSubmitting || !form.firstName || !form.lastName || !form.email || !form.subject || !form.message">
+            {{ isSubmitting ? 'Sending...' : 'Send Message' }}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>

@@ -22,9 +22,11 @@ export class AuthService {
   login(credentials: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/login`, credentials).pipe(
       tap((response: any) => {
-        if (response.token) {
-          localStorage.setItem('token', response.token);
-          this.currentUserSubject.next({ token: response.token });
+        if (response.accessToken) {
+          localStorage.setItem('token', response.accessToken);
+          localStorage.setItem('refreshToken', response.refreshToken);
+          localStorage.setItem('user', JSON.stringify(response.user));
+          this.currentUserSubject.next({ token: response.accessToken, user: response.user });
         }
       })
     );
@@ -36,6 +38,8 @@ export class AuthService {
 
   logout() {
     localStorage.removeItem('token');
+    localStorage.removeItem('refreshToken');
+    localStorage.removeItem('user');
     this.currentUserSubject.next(null);
   }
 

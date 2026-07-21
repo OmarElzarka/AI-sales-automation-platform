@@ -19,6 +19,8 @@ public interface IApplicationDbContext
     DbSet<LeadScoreHistory> LeadScoreHistory { get; }
     DbSet<AIGeneratedContent> AIGeneratedContent { get; }
     DbSet<AutomationLog> AutomationLogs { get; }
+    DbSet<ContactSubmission> ContactSubmissions { get; }
+    DbSet<NewsletterSubscription> NewsletterSubscriptions { get; }
 
     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

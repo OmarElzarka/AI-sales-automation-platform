@@ -1,0 +1,117 @@
+<div class="modal-overlay" *ngIf="isOpen" (click)="onOverlayClick($event)">
+  <div class="modal-content" [class.success-state]="isSuccess">
+
+    <!-- Close button -->
+    <button class="modal-close" (click)="closeModal()" aria-label="Close">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+
+    <!-- Success State -->
+    <div *ngIf="isSuccess" class="success-view">
+      <div class="success-icon">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" stroke="#10b981"/>
+          <polyline points="22 4 12 14.01 9 11.01" stroke="#10b981"/>
+        </svg>
+      </div>
+      <h3>Demo Request Received!</h3>
+      <p>{{ successMessage }}</p>
+      <button class="btn btn-primary" (click)="closeModal()">Got it</button>
+    </div>
+
+    <!-- Form State -->
+    <div *ngIf="!isSuccess" class="form-view">
+      <div class="modal-header">
+        <div class="modal-badge">Request a Demo</div>
+        <h2>See NovaFlow in Action</h2>
+        <p>Fill out the form and our team will reach out to schedule a personalized demo.</p>
+      </div>
+
+      <form (ngSubmit)="submitForm()" class="demo-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="firstName">First Name *</label>
+            <input id="firstName" type="text" class="form-input" [(ngModel)]="form.firstName" name="firstName" placeholder="John" required>
+          </div>
+          <div class="form-group">
+            <label for="lastName">Last Name *</label>
+            <input id="lastName" type="text" class="form-input" [(ngModel)]="form.lastName" name="lastName" placeholder="Doe" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="company">Company *</label>
+            <input id="company" type="text" class="form-input" [(ngModel)]="form.company" name="company" placeholder="Acme Inc." required>
+          </div>
+          <div class="form-group">
+            <label for="businessEmail">Business Email *</label>
+            <input id="businessEmail" type="email" class="form-input" [(ngModel)]="form.businessEmail" name="businessEmail" placeholder="john@acme.com" required>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="phone">Phone</label>
+            <input id="phone" type="tel" class="form-input" [(ngModel)]="form.phone" name="phone" placeholder="+1 (555) 000-0000">
+          </div>
+          <div class="form-group">
+            <label for="industry">Industry</label>
+            <select id="industry" class="form-select" [(ngModel)]="form.industry" name="industry">
+              <option value="">Select industry</option>
+              <option *ngFor="let ind of industries" [value]="ind">{{ ind }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="companySize">Company Size</label>
+            <select id="companySize" class="form-select" [(ngModel)]="form.companySize" name="companySize">
+              <option value="">Select size</option>
+              <option *ngFor="let size of companySizes" [value]="size.value">{{ size.label }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="country">Country</label>
+            <select id="country" class="form-select" [(ngModel)]="form.country" name="country">
+              <option value="">Select country</option>
+              <option *ngFor="let c of countries" [value]="c">{{ c }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="interestedProduct">Interested Product</label>
+            <select id="interestedProduct" class="form-select" [(ngModel)]="form.interestedProduct" name="interestedProduct">
+              <option value="">Select product</option>
+              <option *ngFor="let prod of products" [value]="prod">{{ prod }}</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="estimatedBudget">Estimated Budget</label>
+            <select id="estimatedBudget" class="form-select" [(ngModel)]="form.estimatedBudget" name="estimatedBudget">
+              <option value="">Select budget</option>
+              <option *ngFor="let b of budgets" [value]="b">{{ b }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group full-width">
+          <label for="message">Message</label>
+          <textarea id="message" class="form-textarea" [(ngModel)]="form.message" name="message" placeholder="Tell us about your workflow challenges..." rows="3"></textarea>
+        </div>
+
+        <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
+
+        <button type="submit" class="btn btn-primary btn-lg submit-btn" [disabled]="isSubmitting || !form.firstName || !form.lastName || !form.company || !form.businessEmail">
+          <span *ngIf="!isSubmitting">Request Demo</span>
+          <span *ngIf="isSubmitting" class="loading-dots">Submitting<span>.</span><span>.</span><span>.</span></span>
+        </button>
+
+        <p class="form-disclaimer">By submitting, you agree to our privacy policy. We'll never spam you.</p>
+      </form>
+    </div>
+  </div>
+</div>

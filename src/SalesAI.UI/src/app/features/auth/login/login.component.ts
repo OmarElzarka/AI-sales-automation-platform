@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
+import { finalize } from 'rxjs/operators';
 
 @Component({
   selector: 'app-login',
@@ -37,13 +38,16 @@ export class LoginComponent {
     this.loading = true;
     this.error = '';
 
-    this.authService.login(this.loginForm.value).subscribe({
+    this.authService.login(this.loginForm.value).pipe(
+      finalize(() => {
+        this.loading = false;
+      })
+    ).subscribe({
       next: () => {
         this.router.navigate(['/dashboard']);
       },
       error: (err) => {
         this.error = err.error?.message || 'Login failed. Please check your credentials.';
-        this.loading = false;
       }
     });
   }

@@ -34,6 +34,8 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
     public DbSet<LeadScoreHistory> LeadScoreHistory => Set<LeadScoreHistory>();
     public DbSet<AIGeneratedContent> AIGeneratedContent => Set<AIGeneratedContent>();
     public DbSet<AutomationLog> AutomationLogs => Set<AutomationLog>();
+    public DbSet<ContactSubmission> ContactSubmissions => Set<ContactSubmission>();
+    public DbSet<NewsletterSubscription> NewsletterSubscriptions => Set<NewsletterSubscription>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

@@ -92,3 +92,18 @@ public enum AIContentType
     Playbook,
     LeadScore
 }
+
+public enum ContactInquiryType
+{
+    General,
+    Sales,
+    Support
+}
+
+public enum CompanySize
+{
+    Startup,
+    Small,
+    Medium,
+    Enterprise
+}

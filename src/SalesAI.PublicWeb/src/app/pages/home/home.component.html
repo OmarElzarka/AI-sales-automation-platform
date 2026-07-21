@@ -1,0 +1,279 @@
+<!-- ===== HERO SECTION ===== -->
+<section class="hero">
+  <div class="hero-glow"></div>
+  <div class="hero-grid-bg"></div>
+  <div class="container hero-container">
+    <div class="hero-content animate-fade-in-up">
+      <div class="hero-badge">
+        <span class="badge-dot"></span>
+        Now with AI Copilot 2.0
+      </div>
+      <h1>Automate Your Workflow<br><span class="gradient-text">with Intelligence</span></h1>
+      <p class="hero-subtitle">NovaFlow helps modern teams eliminate busywork, accelerate decisions, and scale operations — all powered by AI that actually understands your business.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary btn-lg" id="hero-request-demo" (click)="openDemoModal()">Request Demo</button>
+        <button class="btn btn-secondary btn-lg">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Watch Video
+        </button>
+      </div>
+      <div class="hero-trust">
+        <span>Trusted by 10,000+ teams</span>
+        <div class="trust-avatars">
+          <div class="avatar">A</div>
+          <div class="avatar">B</div>
+          <div class="avatar">C</div>
+          <div class="avatar">D</div>
+          <div class="avatar more">+2k</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-visual animate-fade-in-up delay-200">
+      <div class="dashboard-preview">
+        <div class="preview-header">
+          <div class="preview-dots">
+            <span></span><span></span><span></span>
+          </div>
+          <span class="preview-title">NovaFlow Dashboard</span>
+        </div>
+        <div class="preview-body">
+          <div class="preview-sidebar">
+            <div class="sidebar-item active"></div>
+            <div class="sidebar-item"></div>
+            <div class="sidebar-item"></div>
+            <div class="sidebar-item"></div>
+            <div class="sidebar-item"></div>
+          </div>
+          <div class="preview-main">
+            <div class="preview-card-row">
+              <div class="mini-card purple">
+                <span class="mini-value">2,847</span>
+                <span class="mini-label">Automations</span>
+              </div>
+              <div class="mini-card cyan">
+                <span class="mini-value">98.5%</span>
+                <span class="mini-label">Success Rate</span>
+              </div>
+              <div class="mini-card green">
+                <span class="mini-value">12.4h</span>
+                <span class="mini-label">Time Saved</span>
+              </div>
+            </div>
+            <div class="preview-chart">
+              <div class="chart-bar" style="height: 40%"></div>
+              <div class="chart-bar" style="height: 65%"></div>
+              <div class="chart-bar" style="height: 45%"></div>
+              <div class="chart-bar" style="height: 80%"></div>
+              <div class="chart-bar active" style="height: 95%"></div>
+              <div class="chart-bar" style="height: 70%"></div>
+              <div class="chart-bar" style="height: 85%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TRUSTED BY ===== -->
+<section class="trusted-by">
+  <div class="container">
+    <p class="trusted-label">Trusted by innovative companies worldwide</p>
+    <div class="logo-bar">
+      <div class="company-logo">TechCorp</div>
+      <div class="company-logo">ScaleUp</div>
+      <div class="company-logo">DataFirst</div>
+      <div class="company-logo">CloudNine</div>
+      <div class="company-logo">Quantum</div>
+      <div class="company-logo">Nexus AI</div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== STATS ===== -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-grid">
+      <div *ngFor="let stat of stats" class="stat-item">
+        <span class="stat-value gradient-text">{{ stat.value }}</span>
+        <span class="stat-label">{{ stat.label }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FEATURES ===== -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">✦ Features</div>
+      <h2>Everything You Need to<br><span class="gradient-text">Automate at Scale</span></h2>
+      <p>From simple task automation to complex AI-driven workflows, NovaFlow has you covered.</p>
+    </div>
+    <div class="features-grid">
+      <div *ngFor="let feature of features; let i = index" class="card feature-card">
+        <div class="feature-icon">{{ feature.icon }}</div>
+        <h3>{{ feature.title }}</h3>
+        <p>{{ feature.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== AI CAPABILITIES ===== -->
+<section class="section ai-section">
+  <div class="ai-glow"></div>
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">🧠 AI-Powered</div>
+      <h2>AI That Actually<br><span class="gradient-text">Understands Your Business</span></h2>
+      <p>Our AI doesn't just follow rules — it learns, adapts, and proactively optimizes your workflows.</p>
+    </div>
+    <div class="ai-grid">
+      <div class="ai-card">
+        <div class="ai-card-icon">🎯</div>
+        <h3>Predictive Scoring</h3>
+        <p>AI scores every lead and opportunity based on 50+ signals, so your team focuses on what matters most.</p>
+        <div class="ai-code-block">
+          <code>
+            <span class="code-comment">// AI scoring a new lead</span><br>
+            <span class="code-key">score</span>: <span class="code-value">87</span> / 100<br>
+            <span class="code-key">category</span>: <span class="code-string">"Hot"</span><br>
+            <span class="code-key">action</span>: <span class="code-string">"Schedule demo ASAP"</span>
+          </code>
+        </div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-icon">📝</div>
+        <h3>Auto-Generated Content</h3>
+        <p>From personalized emails to meeting summaries, AI creates content that sounds like your best rep.</p>
+        <div class="ai-code-block">
+          <code>
+            <span class="code-comment">// AI-drafted outreach</span><br>
+            <span class="code-key">tone</span>: <span class="code-string">"Professional"</span><br>
+            <span class="code-key">personalized</span>: <span class="code-value">true</span><br>
+            <span class="code-key">open_rate</span>: <span class="code-string">"3.2x baseline"</span>
+          </code>
+        </div>
+      </div>
+      <div class="ai-card">
+        <div class="ai-card-icon">🔍</div>
+        <h3>Intelligent Research</h3>
+        <p>AI automatically researches companies, identifies pain points, and suggests winning strategies.</p>
+        <div class="ai-code-block">
+          <code>
+            <span class="code-comment">// Company research</span><br>
+            <span class="code-key">industry</span>: <span class="code-string">"FinTech"</span><br>
+            <span class="code-key">pain_points</span>: <span class="code-value">4 found</span><br>
+            <span class="code-key">pitch_ready</span>: <span class="code-value">true</span>
+          </code>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== HOW IT WORKS ===== -->
+<section class="section" id="how-it-works">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">🚀 How It Works</div>
+      <h2>Up and Running<br><span class="gradient-text">in 4 Simple Steps</span></h2>
+      <p>No complex setup. No long onboarding. Get started in minutes, see results in hours.</p>
+    </div>
+    <div class="steps-grid">
+      <div *ngFor="let step of steps; let i = index" class="step-card">
+        <div class="step-number">{{ step.number }}</div>
+        <div class="step-connector" *ngIf="i < steps.length - 1"></div>
+        <h3>{{ step.title }}</h3>
+        <p>{{ step.description }}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PRICING ===== -->
+<section class="section pricing-section" id="pricing">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">💎 Pricing</div>
+      <h2>Simple, Transparent<br><span class="gradient-text">Pricing for Every Team</span></h2>
+      <p>Start free, scale as you grow. No hidden fees, cancel anytime.</p>
+    </div>
+    <div class="pricing-grid">
+      <div *ngFor="let plan of pricingPlans" class="pricing-card" [class.popular]="plan.popular">
+        <div class="popular-badge" *ngIf="plan.popular">Most Popular</div>
+        <h3>{{ plan.name }}</h3>
+        <div class="price">
+          <span class="price-value">{{ plan.price }}</span>
+          <span class="price-period" *ngIf="plan.period">{{ plan.period }}</span>
+        </div>
+        <p class="plan-desc">{{ plan.description }}</p>
+        <ul class="plan-features">
+          <li *ngFor="let feat of plan.features">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            {{ feat }}
+          </li>
+        </ul>
+        <button class="btn" [class.btn-primary]="plan.popular" [class.btn-secondary]="!plan.popular" [routerLink]="plan.name === 'Enterprise' ? '/contact' : '/book-demo'">{{ plan.cta }}</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIALS ===== -->
+<section class="section">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">💬 Testimonials</div>
+      <h2>Loved by Teams<br><span class="gradient-text">Around the World</span></h2>
+    </div>
+    <div class="testimonials-grid">
+      <div *ngFor="let testimonial of testimonials" class="card testimonial-card">
+        <div class="stars">★★★★★</div>
+        <blockquote>"{{ testimonial.quote }}"</blockquote>
+        <div class="testimonial-author">
+          <div class="author-avatar">{{ testimonial.avatar }}</div>
+          <div>
+            <strong>{{ testimonial.author }}</strong>
+            <span>{{ testimonial.role }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FAQ ===== -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-header">
+      <div class="section-badge">❓ FAQ</div>
+      <h2>Frequently Asked<br><span class="gradient-text">Questions</span></h2>
+    </div>
+    <div class="faq-list">
+      <div *ngFor="let faq of faqs; let i = index" class="faq-item" [class.open]="faq.open" (click)="toggleFaq(i)">
+        <div class="faq-question">
+          <span>{{ faq.question }}</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" class="faq-chevron"><polyline points="6 9 12 15 18 9"/></svg>
+        </div>
+        <div class="faq-answer" *ngIf="faq.open">
+          <p>{{ faq.answer }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CTA ===== -->
+<section class="cta-section">
+  <div class="cta-glow"></div>
+  <div class="container cta-container">
+    <h2>Ready to Transform<br><span class="gradient-text">Your Workflow?</span></h2>
+    <p>Join 10,000+ teams already automating with NovaFlow. Start your free trial today — no credit card required.</p>
+    <div class="cta-actions">
+      <button class="btn btn-primary btn-lg" id="cta-request-demo" (click)="openDemoModal()">Request Demo</button>
+      <button class="btn btn-secondary btn-lg">Start Free Trial</button>
+    </div>
+  </div>
+</section>

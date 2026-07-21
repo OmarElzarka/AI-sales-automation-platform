@@ -1,0 +1,129 @@
+<section class="book-demo-page">
+  <div class="page-glow"></div>
+  <div class="container">
+    <div class="demo-layout">
+      <!-- Left: Info -->
+      <div class="demo-info animate-fade-in-up">
+        <div class="section-badge">🎯 Book a Demo</div>
+        <h1>See NovaFlow<br><span class="gradient-text">In Action</span></h1>
+        <p>Schedule a personalized demo with our product specialists. We'll show you exactly how NovaFlow can transform your workflows.</p>
+
+        <div class="demo-benefits">
+          <div class="benefit-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>30-minute personalized walkthrough</span>
+          </div>
+          <div class="benefit-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>See AI Copilot in action with your data</span>
+          </div>
+          <div class="benefit-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>Custom integration recommendations</span>
+          </div>
+          <div class="benefit-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>ROI analysis for your team</span>
+          </div>
+          <div class="benefit-item">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            <span>No commitment required</span>
+          </div>
+        </div>
+
+        <div class="demo-quote card">
+          <blockquote>"The demo sold us in 15 minutes. We saw exactly how NovaFlow could save our team 20+ hours per week."</blockquote>
+          <div class="quote-author">
+            <div class="author-avatar-sm">MK</div>
+            <div>
+              <strong>Maria Kim</strong>
+              <span>COO, InnovateTech</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right: Form -->
+      <div class="demo-form-card card animate-fade-in-up delay-200">
+        <!-- Success State -->
+        <div *ngIf="isSuccess" class="success-view">
+          <div class="success-icon-lg">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="1.5">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+              <polyline points="22 4 12 14.01 9 11.01"/>
+            </svg>
+          </div>
+          <h2>Demo Booked!</h2>
+          <p>{{ successMessage }}</p>
+          <div class="success-next">
+            <p class="next-label">What happens next?</p>
+            <div class="next-steps">
+              <div class="next-step"><span class="step-num">1</span> You'll receive a confirmation email</div>
+              <div class="next-step"><span class="step-num">2</span> Our team reviews your requirements</div>
+              <div class="next-step"><span class="step-num">3</span> We'll reach out to schedule a time</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Form State -->
+        <div *ngIf="!isSuccess">
+          <h3 class="form-title">Request Your Demo</h3>
+          <p class="form-subtitle">Fill out the details and we'll be in touch within 24 hours.</p>
+
+          <form (ngSubmit)="submitForm()" class="book-demo-form">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="demoFirstName">First Name *</label>
+                <input id="demoFirstName" type="text" class="form-input" [(ngModel)]="form.firstName" name="firstName" placeholder="John" required>
+              </div>
+              <div class="form-group">
+                <label for="demoLastName">Last Name *</label>
+                <input id="demoLastName" type="text" class="form-input" [(ngModel)]="form.lastName" name="lastName" placeholder="Doe" required>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="demoEmail">Business Email *</label>
+              <input id="demoEmail" type="email" class="form-input" [(ngModel)]="form.businessEmail" name="businessEmail" placeholder="john@company.com" required>
+            </div>
+
+            <div class="form-group">
+              <label for="demoCompany">Company *</label>
+              <input id="demoCompany" type="text" class="form-input" [(ngModel)]="form.company" name="company" placeholder="Acme Inc." required>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="demoIndustry">Industry</label>
+                <select id="demoIndustry" class="form-select" [(ngModel)]="form.industry" name="industry">
+                  <option value="">Select industry</option>
+                  <option *ngFor="let ind of industries" [value]="ind">{{ ind }}</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="demoCompanySize">Company Size</label>
+                <select id="demoCompanySize" class="form-select" [(ngModel)]="form.companySize" name="companySize">
+                  <option value="">Select size</option>
+                  <option *ngFor="let size of companySizes" [value]="size.value">{{ size.label }}</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="demoMessage">What challenges are you looking to solve?</label>
+              <textarea id="demoMessage" class="form-textarea" [(ngModel)]="form.message" name="message" placeholder="Tell us about your current workflow pain points..." rows="4"></textarea>
+            </div>
+
+            <p *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</p>
+
+            <button type="submit" class="btn btn-primary btn-lg" [disabled]="isSubmitting || !form.firstName || !form.lastName || !form.businessEmail || !form.company">
+              {{ isSubmitting ? 'Booking...' : 'Book My Demo' }}
+            </button>
+
+            <p class="form-disclaimer">By submitting, you agree to our privacy policy. No spam, ever.</p>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
