@@ -22,7 +22,8 @@ public class GeminiAIService : IAIService
 
     private async Task<string> GenerateContentAsync(string prompt, CancellationToken ct)
     {
-        var apiKey = _configuration["GeminiSettings:ApiKey"];
+        var apiKey = _configuration["GeminiApi:ApiKey"];
+        var model = _configuration["GeminiApi:Model"] ?? "gemini-2.0-flash";
         
         // Return mock data if API key is not configured or is the default placeholder
         if (string.IsNullOrEmpty(apiKey) || apiKey == "YOUR_GEMINI_API_KEY_HERE")
@@ -31,7 +32,7 @@ public class GeminiAIService : IAIService
             return GetMockResponse(prompt);
         }
 
-        var url = $"https://generativelanguage.googleapis.com/v1beta/models/gemini-3.5-flash:generateContent?key={apiKey}";
+        var url = $"https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent?key={apiKey}";
 
         var requestBody = new
         {

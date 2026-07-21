@@ -30,7 +30,8 @@ public class GlobalSearchQueryHandler : IRequestHandler<GlobalSearchQuery, Resul
         var q = request.Query.ToLower();
 
         var leads = await _context.Leads
-            .Where(l => l.FirstName.ToLower().Contains(q) || l.LastName.ToLower().Contains(q) || l.CompanyName.ToLower().Contains(q))
+            .Include(l => l.Company)
+            .Where(l => l.FirstName.ToLower().Contains(q) || l.LastName.ToLower().Contains(q) || (l.Company != null && l.Company.Name.ToLower().Contains(q)))
             .Take(5)
             .ToListAsync(cancellationToken);
 
@@ -41,7 +42,7 @@ public class GlobalSearchQueryHandler : IRequestHandler<GlobalSearchQuery, Resul
 
         foreach (var lead in leads)
         {
-            results.Add(new GlobalSearchResult("Lead", $"{lead.FirstName} {lead.LastName}", lead.CompanyName ?? "No Company", $"/leads/{lead.Id}"));
+            results.Add(new GlobalSearchResult("Lead", $"{lead.FirstName} {lead.LastName}", lead.Company?.Name ?? "No Company", $"/leads/{lead.Id}"));
         }
 
         foreach (var deal in deals)
