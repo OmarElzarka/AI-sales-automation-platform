@@ -19,8 +19,8 @@ Traditional B2B sales processes involve significant manual overhead, including l
 
 ## Technology Stack
 
-*   **Backend:** .NET 8, ASP.NET Core Web API, Entity Framework Core (SQL Server)
-*   **Frontend:** Angular 17, TypeScript, SCSS
+*   **Backend:** .NET 10, ASP.NET Core Web API, Entity Framework Core (SQL Server)
+*   **Frontend:** Angular 19, TypeScript, SCSS
 *   **AI Integration:** Google Gemini API (gemini-3.5-flash)
 *   **Message Broker:** RabbitMQ
 *   **Caching & State:** Redis
@@ -46,7 +46,7 @@ A background consumer listens for this event and sequentially dispatches command
 
 ## Prerequisites
 
-*   .NET 8 SDK
+*   .NET 10 SDK
 *   Node.js (v18+)
 *   Angular CLI (`npm install -g @angular/cli`)
 *   Docker Desktop
