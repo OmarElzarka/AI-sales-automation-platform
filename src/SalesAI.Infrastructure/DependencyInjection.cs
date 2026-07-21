@@ -80,6 +80,9 @@ public static class DependencyInjection
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddSingleton<ICacheService, CacheService>();
         services.AddScoped<IEmailService, EmailService>();
+        services.AddScoped<IBackgroundJobService, HangfireBackgroundJobService>();
+        
+        services.AddHttpClient<IAIService, GeminiAIService>();
 
         // MediatR
         services.AddMediatR(cfg =>

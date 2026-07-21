@@ -67,6 +67,16 @@ app.UseHangfireDashboard("/hangfire", new DashboardOptions
         : []
 });
 
+// Configure Recurring Jobs
+using (var scope = app.Services.CreateScope())
+{
+    var recurringJobManager = scope.ServiceProvider.GetRequiredService<IRecurringJobManager>();
+    recurringJobManager.AddOrUpdate<SalesAI.Application.Features.Tasks.Jobs.FollowUpReminderJob>(
+        "daily-follow-up-reminder",
+        job => job.CheckForFollowUpsAsync(),
+        Cron.Daily());
+}
+
 // Auto-migrate & seed in development
 if (app.Environment.IsDevelopment())
 {
