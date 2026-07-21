@@ -22,6 +22,7 @@ export class LeadDetailComponent implements OnInit {
   scoringInProgress = false;
   emailGenerating = false;
   playbookGenerating = false;
+  researching = false;
   generatedEmail: any = null;
 
   constructor(
@@ -109,6 +110,23 @@ export class LeadDetailComponent implements OnInit {
         console.error('Playbook generation failed:', err);
         this.playbookGenerating = false;
         alert('Playbook generation failed. Check that the Gemini API key is configured.');
+      }
+    });
+  }
+
+  researchCompany() {
+    if (!this.lead?.companyId) return;
+    this.researching = true;
+    this.apiService.post(`/ai/companies/${this.lead.companyId}/research`, {}).subscribe({
+      next: (data: any) => {
+        alert('Company Research Completed: \n' + (data.insights || data.description || 'Check console for details.'));
+        console.log('Company Research Data:', data);
+        this.researching = false;
+      },
+      error: (err) => {
+        console.error('Company research failed:', err);
+        this.researching = false;
+        alert('Company research failed. Check API key.');
       }
     });
   }

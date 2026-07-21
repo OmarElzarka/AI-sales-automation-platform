@@ -149,6 +149,35 @@
           </ul>
         </div>
       </div>
+      
+      <!-- Upcoming Meetings -->
+      <div class="card p-6 col-span-1 lg:col-span-3">
+        <h3 class="text-lg font-semibold text-surface-900 mb-6 flex items-center">
+          <span class="material-symbols-outlined mr-2 text-indigo-500">event</span>
+          Upcoming Meetings
+        </h3>
+        <div *ngIf="upcomingMeetings.length === 0" class="text-center p-8 bg-surface-50 rounded-xl border border-surface-100">
+          <span class="material-symbols-outlined text-4xl text-surface-300 mb-2">event_busy</span>
+          <p class="text-surface-500 font-medium">No upcoming meetings scheduled.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div *ngFor="let meeting of upcomingMeetings" class="p-4 border border-surface-200 rounded-xl hover:border-indigo-300 hover:shadow-md transition-all group">
+            <div class="flex justify-between items-start mb-3">
+              <h4 class="font-bold text-surface-900 group-hover:text-indigo-700 transition-colors">{{ meeting.title }}</h4>
+              <span class="px-2 py-1 bg-indigo-50 text-indigo-700 text-xs font-bold rounded-md flex items-center">
+                <span class="material-symbols-outlined text-[14px] mr-1">schedule</span>
+                {{ meeting.dueDate | date:'shortTime' }}
+              </span>
+            </div>
+            <p class="text-sm text-surface-500 mb-4 line-clamp-2">{{ meeting.description || 'No description provided.' }}</p>
+            <div class="flex items-center justify-between mt-auto pt-3 border-t border-surface-100">
+              <span class="text-xs font-medium text-surface-500">{{ meeting.dueDate | date:'mediumDate' }}</span>
+              <button class="text-xs font-bold text-indigo-600 hover:text-indigo-800 transition-colors">Join Meeting</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </ng-container>
 </div>

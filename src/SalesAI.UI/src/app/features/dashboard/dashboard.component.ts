@@ -16,6 +16,7 @@ export class DashboardComponent implements OnInit {
   activities: any[] = [];
   funnel: any[] = [];
   leadSources: any[] = [];
+  upcomingMeetings: any[] = [];
   loading = true;
   error: string | null = null;
 
@@ -31,9 +32,10 @@ export class DashboardComponent implements OnInit {
 
     forkJoin({
       dashboard: this.apiService.get<any>('/dashboard/data'),
-      activities: this.apiService.get<any[]>('/dashboard/activity', { take: 10 })
+      activities: this.apiService.get<any[]>('/dashboard/activity', { take: 10 }),
+      tasks: this.apiService.get<any[]>('/tasks')
     }).subscribe({
-      next: ({ dashboard, activities }) => {
+      next: ({ dashboard, activities, tasks }) => {
         this.kpis = {
           totalLeads: dashboard.kpis.totalLeads,
           activeDeals: dashboard.kpis.totalDeals,
@@ -48,6 +50,10 @@ export class DashboardComponent implements OnInit {
         }));
         this.leadSources = dashboard.leadSources || [];
         this.activities = activities || [];
+        
+        const allTasks = (tasks as any).items || tasks || [];
+        this.upcomingMeetings = allTasks.filter((t: any) => t.type === 'Meeting' && !t.isCompleted);
+        
         this.loading = false;
       },
       error: (err) => {

@@ -1,152 +1,130 @@
-# SalesAI Automation Platform
+# SalesAI
 
 ## Project Overview
+SalesAI is an automated sales pipeline and CRM platform that integrates artificial intelligence to streamline the sales process. It manages leads, tasks, and deals, and leverages AI to score leads, research companies, summarize meetings, and generate contextual email outreach. 
 
-SalesAI is an automated, AI-driven sales and lead generation platform designed to capture incoming leads, enrich their profiles, and formulate custom outreach strategies using generative AI. The system operates autonomously upon lead creation, interacting with the Gemini API to score the lead, develop a tailored sales playbook, and draft personalized outreach emails.
-
-## Problem
-
-Traditional B2B sales processes involve significant manual overhead, including lead qualification, company research, and crafting personalized outreach. Sales teams often waste valuable time manually compiling context before the first point of contact. This platform automates the entire qualification and preparation pipeline, ensuring that every captured lead is instantly analyzed, scored, and prepared with actionable outreach material before a human sales representative ever looks at it.
+## Problem the Project Solves
+Modern sales teams spend a significant amount of time on manual data entry, lead qualification, and drafting emails. SalesAI automates these repetitive tasks by evaluating inbound leads using AI, automatically generating company research dossiers, providing actionable next steps (playbooks), and composing personalized outreach based on real data, allowing sales representatives to focus on building relationships and closing deals.
 
 ## Key Features
-
-*   **Automated Lead Scoring:** Assigns a numeric score and category (Cold, Warm, Hot) based on lead firmographics and interaction history.
-*   **Dynamic Playbook Generation:** Constructs a customized sales strategy, including recommended channels, anticipated objections, and suggested next steps.
-*   **Personalized Email Generation:** Drafts highly context-aware outreach emails tailored to the specific lead's industry and position.
-*   **Event-Driven Architecture:** Uses RabbitMQ for decoupled, asynchronous processing of background tasks without blocking the main API thread.
-*   **Background Job Processing:** Integrates Hangfire for resilient retry mechanisms and long-running job management.
-*   **Dual Frontend Interface:** A public-facing web application for capturing lead data (NovaFlow demo), and an internal dashboard for sales representatives to review enriched leads and analytics.
+- **Lead Management**: Track and manage leads through their lifecycle from inbound to qualified.
+- **AI Lead Scoring**: Automatically scores leads based on their profile, company size, and intent.
+- **AI Company Research**: Generates summaries of a lead's company to provide context before meetings.
+- **AI Playbook Generation**: Suggests specific engagement strategies and next steps for leads.
+- **AI Email Composer**: Drafts contextual emails based on the lead's profile and desired tone.
+- **Deal Tracking**: Kanban-style pipeline management for tracking deals across stages.
+- **Meeting Summarization**: Extracts key points and action items from meeting transcripts.
+- **Tasks and Calendar**: Manages upcoming tasks, calls, and meetings.
+- **Global Search**: Search across leads and deals using a centralized endpoint.
+- **Dashboard and Reports**: Visualizes KPIs, pipeline funnels, and exports data.
 
 ## Technology Stack
-
-*   **Backend:** .NET 10, ASP.NET Core Web API, Entity Framework Core (SQL Server)
-*   **Frontend:** Angular 19, TypeScript, SCSS
-*   **AI Integration:** Google Gemini API (gemini-3.5-flash)
-*   **Message Broker:** RabbitMQ
-*   **Caching & State:** Redis
-*   **Background Jobs:** Hangfire
-*   **Containerization:** Docker & Docker Compose
+- **Backend**: .NET 10 (C# 14), ASP.NET Core Web API
+- **Frontend**: Angular 19, Tailwind CSS
+- **Database**: Entity Framework Core (In-Memory for demonstration purposes, easily swappable to SQL Server/PostgreSQL)
+- **Architecture**: Clean Architecture with CQRS (MediatR)
+- **AI Provider**: Google Gemini API
+- **Background Processing**: Hangfire (configured for background jobs)
+- **Caching**: Redis (simulated/configurable via ICacheService)
+- **Messaging**: RabbitMQ (simulated for demonstration purposes)
 
 ## Architecture Overview
+The application follows a Clean Architecture approach:
+- **Domain**: Contains enterprise logic and entities.
+- **Application**: Contains business logic, MediatR handlers, and interfaces.
+- **Infrastructure**: Contains external concerns such as database context, AI service integrations, and third-party APIs.
+- **API**: The entry point for the backend, exposing REST endpoints.
 
-The backend is built adhering to Clean Architecture principles. When a lead is captured via the public web interface, an HTTP request is made to the ASP.NET Core API. The API persists the lead to SQL Server and immediately publishes a `LeadCreatedEvent` to RabbitMQ.
-
-A background consumer listens for this event and sequentially dispatches commands using MediatR to score the lead, generate a playbook, and draft an email via the Gemini API. This heavy processing happens entirely asynchronously. Hangfire provides a dashboard for monitoring these background activities, and Redis is utilized for distributed caching to optimize API response times.
+The frontend is a standalone Angular application communicating with the API via standard HTTP requests with JWT-based authentication.
 
 ## Project Structure
-
-*   **`src/`**: Contains the .NET backend solution.
-    *   **`SalesAI.API/`**: The presentation layer, containing API controllers, dependency injection configuration, and Swagger setup.
-    *   **`SalesAI.Application/`**: Contains business logic, CQRS handlers (MediatR), interfaces, and validators.
-    *   **`SalesAI.Domain/`**: The core domain model, including entities, value objects, and domain events.
-    *   **`SalesAI.Infrastructure/`**: Implementations of infrastructure concerns, including the EF Core DbContext, RabbitMQ publishers, Redis caching, and the Gemini AI service implementation.
-*   **`sales-ai.ui/`**: The internal Angular dashboard for sales representatives.
-*   **`sales-ai.public-web/`**: The public-facing Angular application utilized for lead capture and demonstration purposes.
-*   **`docker-compose.yml`**: Defines the required infrastructure dependencies (SQL Server, Redis, RabbitMQ) for local development.
+- `src/SalesAI.API`: The ASP.NET Core Web API entry point. Contains controllers and middleware.
+- `src/SalesAI.Application`: CQRS commands, queries, and validation logic.
+- `src/SalesAI.Domain`: Core entities and enums.
+- `src/SalesAI.Infrastructure`: Implementation of external services (EF Core, Gemini AI, Hangfire).
+- `src/SalesAI.UI`: The Angular 19 frontend application.
 
 ## Prerequisites
+- .NET 10 SDK
+- Node.js (v18 or later)
+- Angular CLI (v19)
+- Google Gemini API Key
 
-*   .NET 10 SDK
-*   Node.js (v18+)
-*   Angular CLI (`npm install -g @angular/cli`)
-*   Docker Desktop
-*   A valid Google Gemini API Key
+## Installation
+1. Clone the repository.
+2. Navigate to the frontend directory (`src/SalesAI.UI`) and run `npm install`.
+3. Navigate to the backend directory (`src/SalesAI.API`) and run `dotnet restore`.
 
 ## Configuration
-
-### Environment Variables & Settings
-
-Update the `appsettings.Development.json` file located in `src/SalesAI.API/` with the required configuration.
-
-### AI Configuration (Gemini API Key)
-
-Provide your Gemini API key in the configuration:
-
-```json
-{
-  "GeminiAI": {
-    "ApiKey": "YOUR_API_KEY_HERE"
-  }
-}
-```
-
-The application is configured to utilize the `gemini-3.5-flash` model.
-
-### Database Setup and Migrations
-
-The application uses Entity Framework Core with SQL Server. Ensure the SQL Server container is running, then apply the migrations:
-
+### AI Configuration (Gemini API key)
+The system uses Google Gemini for its AI capabilities. You must configure your API key in the backend. 
+Use .NET User Secrets to securely store the key:
 ```bash
 cd src/SalesAI.API
-dotnet ef database update
+dotnet user-secrets init
+dotnet user-secrets set "Gemini:ApiKey" "YOUR_API_KEY_HERE"
 ```
 
-## Installation and Execution
+### Environment Variables
+For development, you can also set the following environment variables or modify `appsettings.Development.json`:
+- `Jwt:Key` - The secret key used for generating JWTs.
+- `Jwt:Issuer` - The issuer of the JWT.
+- `Jwt:Audience` - The audience of the JWT.
 
-### Docker Setup
-
-Start the required infrastructure services (SQL Server, Redis, and RabbitMQ):
-
-```bash
-docker-compose up -d
-```
-
-### How to run the backend
-
-Navigate to the API project and start the server:
-
+## How to run the backend
+From the root directory or `src/SalesAI.API`:
 ```bash
 cd src/SalesAI.API
 dotnet run
 ```
+The API will be available at `http://localhost:8080`.
 
-The API will be available at `https://localhost:5001` or `http://localhost:5000` depending on your local launch settings.
-
-### API Documentation (Swagger)
-
-When the backend is running in the Development environment, the Swagger UI is available at:
-`http://localhost:5000/swagger`
-
-### How to run the frontend(s)
-
-**Internal Dashboard (SalesAI.UI):**
+## How to run the frontend
+From the `src/SalesAI.UI` directory:
 ```bash
 cd src/SalesAI.UI
-npm install
 npm start
 ```
-The application will be accessible at `http://localhost:4200`.
+The frontend will be available at `http://localhost:4201`.
 
-**Public Web Interface (SalesAI.PublicWeb):**
-```bash
-cd src/SalesAI.PublicWeb
-npm install
-npm start -- --port 4201
-```
-The application will be accessible at `http://localhost:4201`.
+## Docker setup
+Currently, the application runs natively. Future updates will include `Dockerfile` and `docker-compose.yml` for containerized deployment of the API, Angular app, Redis, and RabbitMQ.
 
-## Infrastructure Details
+## Database setup and migrations
+The project currently uses an In-Memory database (`SalesAIDb`) for demonstration purposes, so no initial migrations are required to run the project. To switch to a persistent store (e.g., SQL Server), update the `DbContext` configuration in `DependencyInjection.cs` and run standard EF Core migrations.
 
-*   **RabbitMQ**: Accessible at `localhost:5672` (AMQP) and `localhost:15672` (Management UI, default credentials: `guest`/`guest`).
-*   **Redis**: Accessible at `localhost:6379`.
-*   **Hangfire**: The dashboard for background job monitoring is hosted by the API and accessible at `/hangfire`.
+## RabbitMQ
+Messaging is abstracted via the `IMessagePublisher` interface. The current implementation provides a direct simulation for demonstration. A RabbitMQ provider can be implemented and injected to scale message processing.
 
-## Demo Workflow
+## Redis
+Caching is abstracted via the `ICacheService` interface. The current implementation uses an in-memory dictionary. A Redis provider can be plugged in by registering `StackExchange.Redis` in the infrastructure layer.
 
-1.  Ensure Docker containers, the backend API, and both frontend applications are running.
-2.  Navigate to the Public Web interface (`http://localhost:4201`).
-3.  Fill out the demonstration capture form to simulate an inbound prospect.
-4.  Navigate to the Internal Dashboard (`http://localhost:4200`).
-5.  Observe the newly captured lead. The AI analysis (Scoring, Playbook, Email) will initially display as pending.
-6.  Wait a few moments as the background RabbitMQ consumers process the lead via the Gemini API.
-7.  Refresh the lead view to see the dynamically generated score, sales strategy, and drafted email content.
+## Hangfire
+Hangfire is configured and registered in the infrastructure layer to handle background tasks and scheduled jobs (e.g., syncing data, recurring email sequences). The dashboard is not exposed by default but can be enabled in `Program.cs`.
 
-## Development Notes
+## API documentation (Swagger)
+When running in the Development environment, Swagger UI is available at:
+`http://localhost:8080/swagger`
+This provides interactive documentation and testing for all REST endpoints.
 
-The `GeminiAIService` contains built-in deserialization fallbacks. If the Gemini API returns malformed JSON or encounters rate-limiting (e.g., `503 Service Unavailable` on free tiers), the application catches the `JsonException` and gracefully falls back to structured mock data to prevent application failure.
+## Demo workflow
+1. Start the backend and frontend.
+2. Open the frontend and log in with any credentials (authentication is simulated for the demo).
+3. Navigate to the **Leads** page and click "New Lead" to create a lead.
+4. Click on the lead to open the details page and click **AI Score** or **AI Research** to see the Gemini integration in action.
+5. Create a Deal in the **Deals** pipeline and test the meeting summarization feature.
+6. Use the **Outreach** tab to generate an AI-composed email.
+7. Use the global search bar to quickly find leads or deals.
 
-## Future Improvements
+## Development notes
+- The project enforces .NET 10 and Angular 19. Do not downgrade these versions.
+- The UI leverages Tailwind CSS with a custom color palette. Adhere to the existing design system for any new components.
 
-*   Implement WebSockets (SignalR) to push real-time AI processing updates to the UI rather than requiring a manual refresh.
-*   Integrate email sending functionality to directly dispatch the generated emails via SMTP or SendGrid.
-*   Expand integration to a production-grade external CRM (e.g., Salesforce or HubSpot).
+## Future improvements
+- Implement persistent SQL Server database via EF Core.
+- Add complete Docker Compose environment (SQL Server, Redis, RabbitMQ).
+- Implement WebSockets for real-time notifications when AI tasks complete.
+- Expand tests coverage (xUnit for backend, Jasmine/Karma for frontend).
+
+## License
+MIT License

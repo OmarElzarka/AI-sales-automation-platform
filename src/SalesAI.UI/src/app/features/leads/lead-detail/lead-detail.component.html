@@ -14,7 +14,13 @@
         </div>
         <div>
           <h1 class="text-3xl font-bold text-surface-900 tracking-tight">{{ lead.firstName }} {{ lead.lastName }}</h1>
-          <p class="text-lg text-surface-600 mt-1">{{ lead.jobTitle }} at <span class="font-medium text-surface-900">{{ lead.companyName }}</span></p>
+          <p class="text-lg text-surface-600 mt-1">{{ lead.jobTitle }} at 
+            <span class="font-medium text-surface-900 mr-2">{{ lead.companyName }}</span>
+            <button class="btn-secondary text-xs px-2 py-1 bg-brand-50 text-brand-700 border-brand-200" (click)="researchCompany()" [disabled]="researching" *ngIf="lead.companyId">
+              <span class="material-symbols-outlined text-[14px] mr-1" [class.animate-spin]="researching">search</span>
+              {{ researching ? 'Researching...' : 'AI Research' }}
+            </button>
+          </p>
           <div class="flex items-center gap-4 mt-3 text-sm text-surface-500">
             <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">email</span> {{ lead.email }}</span>
             <span class="flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-md font-medium text-xs">{{ lead.status }}</span>
@@ -89,9 +95,15 @@
         </div>
         
         <div class="relative z-10">
-          <div class="flex items-center gap-2 mb-6">
-            <span class="material-symbols-outlined text-brand-600">auto_awesome</span>
-            <h3 class="text-lg font-bold text-surface-900 tracking-tight">AI Lead Score</h3>
+          <div class="flex items-center justify-between mb-6">
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-brand-600">auto_awesome</span>
+              <h3 class="text-lg font-bold text-surface-900 tracking-tight">AI Lead Score</h3>
+            </div>
+            <button class="btn-secondary text-xs px-3 py-1.5" (click)="scoreLead()" [disabled]="scoringInProgress">
+              <span class="material-symbols-outlined text-[14px] mr-1" [class.animate-spin]="scoringInProgress">refresh</span>
+              {{ scoringInProgress ? 'Scoring...' : 'Score' }}
+            </button>
           </div>
           
           <div class="flex items-end gap-4 mb-5">

@@ -36,4 +36,30 @@ public class ReportsController : ControllerBase
 
         return Ok(new { metrics, insights });
     }
+
+    [HttpGet("export-csv")]
+    public IActionResult ExportCsv()
+    {
+        var csvContent = "Metric,Value\n" +
+                         "Total Revenue,$2450000\n" +
+                         "Avg Deal Size,$34000\n" +
+                         "Sales Cycle Days,42\n" +
+                         "Win Rate,68.5%";
+        var bytes = System.Text.Encoding.UTF8.GetBytes(csvContent);
+        return File(bytes, "text/csv", "sales_report.csv");
+    }
+
+    [HttpGet("export-pdf")]
+    public IActionResult ExportPdf()
+    {
+        // Dummy PDF export. A real implementation would use a library like iTextSharp or DinkToPdf.
+        var pdfContent = "%PDF-1.4\n1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n" +
+                         "2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n" +
+                         "3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 4 0 R >> >> /Contents 5 0 R >>\nendobj\n" +
+                         "4 0 obj\n<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>\nendobj\n" +
+                         "5 0 obj\n<< /Length 53 >>\nstream\nBT\n/F1 12 Tf\n100 700 Td\n(Sales Report Mock PDF) Tj\nET\nendstream\nendobj\n" +
+                         "trailer\n<< /Root 1 0 R >>\n%%EOF";
+        var bytes = System.Text.Encoding.UTF8.GetBytes(pdfContent);
+        return File(bytes, "application/pdf", "sales_report.pdf");
+    }
 }

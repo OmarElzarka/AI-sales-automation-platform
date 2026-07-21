@@ -43,10 +43,12 @@ public class CreatePublicLeadCommandValidator : AbstractValidator<CreatePublicLe
 public class CreatePublicLeadCommandHandler : IRequestHandler<CreatePublicLeadCommand, Result<PublicLeadResponse>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ICacheService _cacheService;
 
-    public CreatePublicLeadCommandHandler(IApplicationDbContext context)
+    public CreatePublicLeadCommandHandler(IApplicationDbContext context, ICacheService cacheService)
     {
         _context = context;
+        _cacheService = cacheService;
     }
 
     public async Task<Result<PublicLeadResponse>> Handle(CreatePublicLeadCommand request, CancellationToken cancellationToken)
@@ -132,6 +134,10 @@ public class CreatePublicLeadCommandHandler : IRequestHandler<CreatePublicLeadCo
             $"New demo request from {request.FirstName} {request.LastName} at {request.Company}"));
 
         await _context.SaveChangesAsync(cancellationToken);
+
+        // Invalidate dashboard caches so the new lead appears immediately
+        await _cacheService.RemoveAsync("dashboard_data_all", cancellationToken);
+        await _cacheService.RemoveAsync($"dashboard_data_{assignedUser.Id}", cancellationToken);
 
         return Result<PublicLeadResponse>.Success(
             new PublicLeadResponse(lead.Id, "Thank you for your interest! Our team will contact you shortly.", "Received"));

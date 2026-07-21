@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MediatR;
+using SalesAI.Application.Features.Outreach.Commands;
 
 namespace SalesAI.API.Controllers;
 
@@ -8,11 +10,21 @@ namespace SalesAI.API.Controllers;
 [Route("api/[controller]")]
 public class OutreachController : ControllerBase
 {
-    [HttpPost("email/send")]
-    public IActionResult SendEmail([FromBody] SendEmailRequest request)
+    private readonly IMediator _mediator;
+
+    public OutreachController(IMediator mediator)
     {
-        // In a real system, this would queue a message to RabbitMQ to send via SMTP/SendGrid.
-        // For now, we simulate a successful send to fulfill the frontend integration.
+        _mediator = mediator;
+    }
+
+    [HttpPost("email/send")]
+    public async Task<IActionResult> SendEmail([FromBody] SendEmailRequest request)
+    {
+        var result = await _mediator.Send(new SendEmailCommand(request.To, request.Subject, request.Body, request.Tone));
+        
+        if (!result.Succeeded)
+            return BadRequest(new { result.Message });
+
         return Ok(new { Message = "Email sent successfully" });
     }
 }

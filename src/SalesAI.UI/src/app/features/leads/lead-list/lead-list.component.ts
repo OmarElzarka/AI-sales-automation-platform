@@ -1,14 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-lead-list',
   standalone: true,
   imports: [
     CommonModule, 
-    RouterModule
+    RouterModule,
+    FormsModule
   ],
   templateUrl: './lead-list.component.html',
   styleUrls: ['./lead-list.component.scss']
@@ -18,6 +19,15 @@ export class LeadListComponent implements OnInit {
   dataSource: any[] = [];
   loading = true;
   error: string | null = null;
+  
+  showNewLeadModal = false;
+  newLead = {
+    firstName: '',
+    lastName: '',
+    email: '',
+    companyName: ''
+  };
+  submitting = false;
 
   constructor(private apiService: ApiService) {}
 
@@ -38,6 +48,42 @@ export class LeadListComponent implements OnInit {
         this.error = 'Failed to load leads.';
         this.dataSource = [];
         this.loading = false;
+      }
+    });
+  }
+
+  openNewLeadModal() {
+    this.showNewLeadModal = true;
+    this.newLead = { firstName: '', lastName: '', email: '', companyName: '' };
+  }
+
+  closeNewLeadModal() {
+    this.showNewLeadModal = false;
+  }
+
+  submitNewLead() {
+    if (!this.newLead.firstName || !this.newLead.lastName || !this.newLead.email) {
+      alert('First Name, Last Name, and Email are required.');
+      return;
+    }
+    
+    this.submitting = true;
+    this.apiService.post('/leads', {
+      firstName: this.newLead.firstName,
+      lastName: this.newLead.lastName,
+      email: this.newLead.email,
+      companyName: this.newLead.companyName,
+      source: 'Manual'
+    }).subscribe({
+      next: () => {
+        this.submitting = false;
+        this.showNewLeadModal = false;
+        this.loadLeads();
+      },
+      error: (err) => {
+        console.error('Failed to create lead:', err);
+        alert('Failed to create lead. Please check the required fields.');
+        this.submitting = false;
       }
     });
   }

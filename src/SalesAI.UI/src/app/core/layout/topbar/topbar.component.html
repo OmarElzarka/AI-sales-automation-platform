@@ -16,7 +16,7 @@
       <div *ngIf="showResults" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
         <div class="p-2">
           <h4 class="text-xs font-semibold text-surface-500 uppercase px-3 py-2">Quick Results</h4>
-          <a *ngFor="let res of mockResults" [routerLink]="res.route" class="flex items-center justify-between p-3 hover:bg-surface-50 rounded-md cursor-pointer transition-colors">
+          <a *ngFor="let res of searchResults" [routerLink]="res.route" class="flex items-center justify-between p-3 hover:bg-surface-50 rounded-md cursor-pointer transition-colors" (click)="closeSearch()">
             <div class="flex items-center gap-3">
               <span class="material-symbols-outlined text-surface-400 text-[18px]">{{ res.type === 'Lead' ? 'person' : 'monetization_on' }}</span>
               <div>
@@ -26,6 +26,7 @@
             </div>
             <span class="text-[10px] font-medium px-2 py-0.5 bg-surface-100 rounded text-surface-600 uppercase tracking-wide">{{ res.type }}</span>
           </a>
+          <div *ngIf="searchResults.length === 0" class="p-3 text-sm text-surface-500">No results found.</div>
         </div>
         <div class="bg-surface-50 p-3 border-t border-surface-100 text-center">
           <span class="text-xs text-brand-600 font-medium cursor-pointer hover:text-brand-700">View all results for "{{ searchQuery }}"</span>

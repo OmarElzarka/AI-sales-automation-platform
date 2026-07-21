@@ -37,4 +37,32 @@ export class ReportsComponent implements OnInit {
       }
     });
   }
+
+  exportCsv() {
+    this.apiService.get('/reports/export-csv', { responseType: 'blob' } as any).subscribe({
+      next: (blob: any) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'sales_report.csv';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => console.error('Failed to export CSV:', err)
+    });
+  }
+
+  exportPdf() {
+    this.apiService.get('/reports/export-pdf', { responseType: 'blob' } as any).subscribe({
+      next: (blob: any) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'sales_report.pdf';
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (err) => console.error('Failed to export PDF:', err)
+    });
+  }
 }

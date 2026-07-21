@@ -2,11 +2,11 @@
   <div class="flex items-center justify-between">
     <h1 class="text-2xl font-bold text-surface-900 tracking-tight">Sales Reports & AI Insights</h1>
     <div class="flex space-x-3">
-      <button class="btn-secondary flex items-center">
-        <span class="material-symbols-outlined text-[18px] mr-2 text-surface-500">calendar_today</span> 
-        Last 30 Days
+      <button class="btn-secondary flex items-center" (click)="exportCsv()">
+        <span class="material-symbols-outlined text-[18px] mr-2">csv</span> 
+        Export CSV
       </button>
-      <button class="btn-primary flex items-center">
+      <button class="btn-primary flex items-center" (click)="exportPdf()">
         <span class="material-symbols-outlined text-[18px] mr-2">download</span> 
         Export PDF
       </button>
