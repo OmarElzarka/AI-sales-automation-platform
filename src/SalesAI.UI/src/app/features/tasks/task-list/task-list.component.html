@@ -1,0 +1,73 @@
+<div class="space-y-6 max-w-5xl mx-auto">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-semibold text-gray-900">Tasks & Calendar</h1>
+    <button mat-flat-button color="primary">
+      <mat-icon>add</mat-icon> New Task
+    </button>
+  </div>
+
+  <div *ngIf="loading" class="flex justify-center p-12">
+    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+  </div>
+
+  <mat-card *ngIf="!loading" class="rounded-xl shadow-sm border border-gray-200">
+    <mat-tab-group>
+      
+      <mat-tab label="Upcoming Tasks">
+        <div class="p-0">
+          <ul class="divide-y divide-gray-200">
+            <li *ngFor="let task of getPendingTasks()" class="p-4 hover:bg-gray-50 transition-colors flex items-start gap-4">
+              <div class="pt-1">
+                <mat-checkbox [checked]="task.isCompleted" (change)="toggleTaskCompletion(task)" color="primary"></mat-checkbox>
+              </div>
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <h3 class="text-base font-medium text-gray-900">{{ task.title }}</h3>
+                  <span class="text-sm font-medium" [ngClass]="{'text-red-600': true}">{{ task.dueDate | date:'mediumDate' }}</span>
+                </div>
+                <p class="text-sm text-gray-500 mt-1">{{ task.description }}</p>
+                <div class="flex items-center gap-4 mt-3">
+                  <span class="inline-flex items-center gap-1 text-xs font-medium text-gray-600 bg-gray-100 px-2 py-1 rounded">
+                    <mat-icon class="text-[14px] h-[14px] w-[14px]">{{ getIconForType(task.type) }}</mat-icon>
+                    {{ task.type }}
+                  </span>
+                  <span class="text-xs text-blue-600 font-medium hover:underline cursor-pointer">{{ task.relatedEntity }}</span>
+                </div>
+              </div>
+              <div>
+                <button mat-icon-button class="text-gray-400 hover:text-gray-600">
+                  <mat-icon>more_vert</mat-icon>
+                </button>
+              </div>
+            </li>
+            
+            <li *ngIf="getPendingTasks().length === 0" class="p-8 text-center text-gray-500">
+              <mat-icon class="text-4xl mb-2 opacity-50">done_all</mat-icon>
+              <p>You're all caught up! No pending tasks.</p>
+            </li>
+          </ul>
+        </div>
+      </mat-tab>
+      
+      <mat-tab label="Completed">
+        <div class="p-0">
+          <ul class="divide-y divide-gray-200 opacity-75">
+            <li *ngFor="let task of getCompletedTasks()" class="p-4 flex items-start gap-4">
+              <div class="pt-1">
+                <mat-checkbox [checked]="task.isCompleted" (change)="toggleTaskCompletion(task)" color="primary"></mat-checkbox>
+              </div>
+              <div class="flex-1">
+                <h3 class="text-base font-medium text-gray-500 line-through">{{ task.title }}</h3>
+                <div class="flex items-center gap-4 mt-2">
+                  <span class="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded">{{ task.type }}</span>
+                  <span class="text-xs text-gray-400">{{ task.relatedEntity }}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </mat-tab>
+      
+    </mat-tab-group>
+  </mat-card>
+</div>
