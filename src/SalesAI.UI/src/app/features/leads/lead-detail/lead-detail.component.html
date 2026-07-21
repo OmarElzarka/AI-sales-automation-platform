@@ -1,75 +1,81 @@
 <div *ngIf="loading" class="flex justify-center p-12">
-  <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600"></div>
 </div>
 
-<div *ngIf="!loading && lead" class="space-y-6 max-w-7xl mx-auto">
+<div *ngIf="!loading && lead" class="space-y-6 max-w-7xl mx-auto pb-12">
   
   <!-- Header Card -->
-  <mat-card class="p-6 rounded-xl shadow-sm border-t-4 border-blue-600">
-    <div class="flex justify-between items-start">
-      <div class="flex items-center gap-4">
-        <div class="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold">
+  <div class="card p-6 border-t-4 border-t-brand-600 relative overflow-hidden">
+    <div class="absolute right-0 top-0 w-32 h-32 bg-brand-50 rounded-bl-full -mr-4 -mt-4 opacity-50 pointer-events-none"></div>
+    <div class="flex flex-col sm:flex-row justify-between sm:items-start gap-4 relative z-10">
+      <div class="flex items-center gap-5">
+        <div class="h-16 w-16 rounded-full bg-brand-100 flex items-center justify-center text-brand-700 text-2xl font-bold shadow-sm">
           {{ lead.firstName[0] }}{{ lead.lastName[0] }}
         </div>
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">{{ lead.firstName }} {{ lead.lastName }}</h1>
-          <p class="text-lg text-gray-600">{{ lead.jobTitle }} at <span class="font-medium text-gray-900">{{ lead.companyName }}</span></p>
-          <div class="flex items-center gap-4 mt-2 text-sm text-gray-500">
-            <span class="flex items-center gap-1"><mat-icon class="text-sm">email</mat-icon> {{ lead.email }}</span>
-            <span class="flex items-center gap-1 bg-green-100 text-green-800 px-2 py-0.5 rounded-full font-medium">{{ lead.status }}</span>
+          <h1 class="text-3xl font-bold text-surface-900 tracking-tight">{{ lead.firstName }} {{ lead.lastName }}</h1>
+          <p class="text-lg text-surface-600 mt-1">{{ lead.jobTitle }} at <span class="font-medium text-surface-900">{{ lead.companyName }}</span></p>
+          <div class="flex items-center gap-4 mt-3 text-sm text-surface-500">
+            <span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-[16px]">email</span> {{ lead.email }}</span>
+            <span class="flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-0.5 rounded-md font-medium text-xs">{{ lead.status }}</span>
           </div>
         </div>
       </div>
-      <div class="flex gap-2">
-        <button mat-stroked-button color="primary">Edit Lead</button>
-        <button mat-flat-button color="primary">Convert to Deal</button>
+      <div class="flex gap-3">
+        <button class="btn-secondary">Edit Lead</button>
+        <button class="btn-primary">Convert to Deal</button>
       </div>
     </div>
-  </mat-card>
+  </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <!-- Left Column: Details & Timeline -->
     <div class="col-span-2 space-y-6">
       
-      <mat-card class="rounded-xl shadow-sm">
-        <mat-tab-group>
-          <mat-tab label="Timeline">
-            <div class="p-6 flow-root">
-              <ul class="-mb-8">
-                <li *ngFor="let activity of lead.activities; let isLast = last">
-                  <div class="relative pb-8">
-                    <span *ngIf="!isLast" class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
-                    <div class="relative flex space-x-3">
-                      <div>
-                        <span class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center ring-8 ring-white">
-                          <mat-icon class="text-sm text-blue-600">event</mat-icon>
-                        </span>
-                      </div>
-                      <div class="min-w-0 flex-1 pt-1 flex justify-between space-x-4">
-                        <div>
-                          <p class="text-sm text-gray-800 font-medium">{{ activity.title }}</p>
-                          <p class="text-sm text-gray-500">{{ activity.type }}</p>
-                        </div>
-                        <div class="text-right text-xs whitespace-nowrap text-gray-500">
-                          {{ activity.date | date:'medium' }}
-                        </div>
-                      </div>
+      <div class="card overflow-hidden">
+        <!-- Custom Tabs (Mocked visually) -->
+        <div class="border-b border-surface-200">
+          <nav class="flex -mb-px px-6">
+            <a href="javascript:void(0)" class="border-brand-500 text-brand-600 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm">Timeline</a>
+            <a href="javascript:void(0)" class="border-transparent text-surface-500 hover:text-surface-700 hover:border-surface-300 whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm ml-8">Notes</a>
+          </nav>
+        </div>
+
+        <div class="p-6 flow-root">
+          <ul class="-mb-8">
+            <li *ngFor="let activity of lead.activities; let isLast = last">
+              <div class="relative pb-8">
+                <span *ngIf="!isLast" class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-surface-200" aria-hidden="true"></span>
+                <div class="relative flex space-x-4">
+                  <div>
+                    <span class="h-8 w-8 rounded-full bg-brand-50 flex items-center justify-center ring-4 ring-white border border-brand-100">
+                      <span class="material-symbols-outlined text-[16px] text-brand-600">event</span>
+                    </span>
+                  </div>
+                  <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                    <div>
+                      <p class="text-sm text-surface-900 font-medium">{{ activity.title }}</p>
+                      <p class="text-xs text-surface-500 mt-0.5">{{ activity.type }}</p>
+                    </div>
+                    <div class="text-right text-xs whitespace-nowrap text-surface-400 font-medium">
+                      {{ activity.date | date:'mediumDate' }} <br/>
+                      <span class="text-surface-400 font-normal">{{ activity.date | date:'shortTime' }}</span>
                     </div>
                   </div>
-                </li>
-              </ul>
-            </div>
-          </mat-tab>
-          <mat-tab label="Notes">
-            <div class="p-6">
-              <textarea class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring focus:border-blue-300" rows="4" placeholder="Add a note..."></textarea>
-              <div class="mt-2 flex justify-end">
-                <button mat-flat-button color="primary">Save Note</button>
+                </div>
               </div>
-            </div>
-          </mat-tab>
-        </mat-tab-group>
-      </mat-card>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="card p-6">
+        <h3 class="text-base font-semibold text-surface-900 mb-3">Add a Note</h3>
+        <textarea class="input-field" rows="3" placeholder="Write something about this lead..."></textarea>
+        <div class="mt-3 flex justify-end">
+          <button class="btn-primary">Save Note</button>
+        </div>
+      </div>
 
     </div>
 
@@ -77,50 +83,63 @@
     <div class="col-span-1 space-y-6">
       
       <!-- AI Lead Score -->
-      <mat-card class="p-6 rounded-xl shadow-sm bg-gradient-to-br from-indigo-50 to-blue-50 border border-blue-100">
-        <div class="flex items-center gap-2 mb-4">
-          <mat-icon class="text-blue-600">auto_awesome</mat-icon>
-          <h3 class="text-lg font-bold text-gray-900">AI Lead Score</h3>
+      <div class="card p-6 bg-gradient-to-br from-surface-50 to-brand-50 border-brand-100 shadow-sm relative overflow-hidden group">
+        <div class="absolute -right-4 -top-4 text-brand-200 opacity-20 transform rotate-12 transition-transform group-hover:rotate-45 group-hover:scale-110">
+          <span class="material-symbols-outlined text-9xl">auto_awesome</span>
         </div>
         
-        <div class="flex items-end gap-3 mb-4">
-          <span class="text-5xl font-black text-gray-900">{{ lead.scoreNumeric }}</span>
-          <span class="px-3 py-1 bg-red-100 text-red-800 text-sm font-bold rounded-full mb-1">{{ lead.scoreCategory }}</span>
+        <div class="relative z-10">
+          <div class="flex items-center gap-2 mb-6">
+            <span class="material-symbols-outlined text-brand-600">auto_awesome</span>
+            <h3 class="text-lg font-bold text-surface-900 tracking-tight">AI Lead Score</h3>
+          </div>
+          
+          <div class="flex items-end gap-4 mb-5">
+            <span class="text-6xl font-black text-surface-900 leading-none tracking-tighter">{{ lead.scoreNumeric }}</span>
+            <span class="px-3 py-1 bg-rose-100 text-rose-800 border border-rose-200 text-xs font-bold rounded-md uppercase tracking-wider mb-1 shadow-sm">{{ lead.scoreCategory }}</span>
+          </div>
+          
+          <p class="text-sm text-surface-700 leading-relaxed font-medium bg-white/60 p-3 rounded-lg border border-white/40 shadow-sm">{{ lead.scoreReasoning }}</p>
         </div>
-        
-        <p class="text-sm text-gray-700 leading-relaxed">{{ lead.scoreReasoning }}</p>
-      </mat-card>
+      </div>
 
       <!-- AI Playbook -->
-      <mat-card class="p-6 rounded-xl shadow-sm border border-gray-200">
-        <div class="flex items-center justify-between mb-4">
+      <div class="card p-6 border-indigo-100 shadow-sm">
+        <div class="flex items-center justify-between mb-5">
           <div class="flex items-center gap-2">
-            <mat-icon class="text-purple-600">smart_toy</mat-icon>
-            <h3 class="text-lg font-bold text-gray-900">Sales Playbook</h3>
+            <span class="material-symbols-outlined text-indigo-600">smart_toy</span>
+            <h3 class="text-lg font-bold text-surface-900 tracking-tight">Sales Playbook</h3>
           </div>
-          <button *ngIf="!lead.aiPlaybook" mat-button color="primary" (click)="generatePlaybook()">Generate</button>
+          <button *ngIf="!lead.aiPlaybook" class="btn-secondary text-xs px-3 py-1.5" (click)="generatePlaybook()">Generate</button>
         </div>
 
-        <div *ngIf="!lead.aiPlaybook" class="text-center py-6 text-gray-500 text-sm">
-          No playbook generated yet. Click generate to analyze this lead and get actionable next steps.
+        <div *ngIf="!lead.aiPlaybook" class="text-center py-8 px-4 bg-surface-50 rounded-lg border border-dashed border-surface-300">
+          <span class="material-symbols-outlined text-surface-400 text-3xl mb-2">auto_fix_high</span>
+          <p class="text-surface-500 text-sm">No playbook generated yet.<br/>Generate one to get actionable steps.</p>
         </div>
 
-        <div *ngIf="lead.aiPlaybook" class="space-y-4">
-          <div>
-            <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Best Channel</h4>
-            <p class="text-sm text-gray-900 mt-1 font-medium">{{ lead.aiPlaybook.bestChannel.channel }}</p>
-            <p class="text-xs text-gray-600 mt-1">{{ lead.aiPlaybook.bestChannel.reasoning }}</p>
+        <div *ngIf="lead.aiPlaybook" class="space-y-5">
+          <div class="bg-indigo-50 p-4 rounded-lg border border-indigo-100">
+            <h4 class="text-[10px] font-bold text-indigo-800 uppercase tracking-widest mb-1 flex items-center"><span class="material-symbols-outlined text-[14px] mr-1">campaign</span> Best Channel</h4>
+            <p class="text-sm text-indigo-900 font-semibold">{{ lead.aiPlaybook.bestChannel.channel }}</p>
+            <p class="text-xs text-indigo-700 mt-1">{{ lead.aiPlaybook.bestChannel.reasoning }}</p>
           </div>
-          <mat-divider></mat-divider>
-          <div>
-            <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Suggested Approach</h4>
-            <p class="text-sm text-gray-900 mt-1">{{ lead.aiPlaybook.salesApproach.strategy }}</p>
-            <div class="mt-2 p-3 bg-gray-50 rounded border border-gray-200 text-sm italic text-gray-700">
-              "{{ lead.aiPlaybook.salesApproach.openingLine }}"
+          
+          <div class="p-4 rounded-lg border border-surface-200 bg-surface-50">
+            <h4 class="text-[10px] font-bold text-surface-500 uppercase tracking-widest mb-2 flex items-center"><span class="material-symbols-outlined text-[14px] mr-1">lightbulb</span> Suggested Approach</h4>
+            <p class="text-sm text-surface-900 font-medium leading-relaxed">{{ lead.aiPlaybook.salesApproach.strategy }}</p>
+            
+            <div class="mt-4 relative">
+              <div class="absolute -left-2 -top-2 text-surface-300">
+                <span class="material-symbols-outlined">format_quote</span>
+              </div>
+              <div class="p-4 bg-white rounded-md shadow-sm border border-surface-200 text-sm italic text-surface-700 relative z-10 pl-6">
+                {{ lead.aiPlaybook.salesApproach.openingLine }}
+              </div>
             </div>
           </div>
         </div>
-      </mat-card>
+      </div>
 
     </div>
   </div>

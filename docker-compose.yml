@@ -25,7 +25,7 @@ services:
       - SA_PASSWORD=SalesAI_Dev_2026!
       - MSSQL_PID=Developer
     ports:
-      - "1433:1433"
+      - "14330:1433"
     volumes:
       - sqlserver-data:/var/opt/mssql
     healthcheck:
@@ -36,8 +36,31 @@ services:
     networks:
       - salesai-network
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - salesai-network
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    ports:
+      - "5672:5672"   # AMQP protocol port
+      - "15672:15672" # Management UI
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    volumes:
+      - rabbitmq-data:/var/lib/rabbitmq
+    networks:
+      - salesai-network
 volumes:
   sqlserver-data:
+  redis-data:
+  rabbitmq-data:
 
 networks:
   salesai-network:

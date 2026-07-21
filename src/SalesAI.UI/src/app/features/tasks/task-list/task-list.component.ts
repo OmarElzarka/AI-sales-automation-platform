@@ -1,10 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatTabsModule } from '@angular/material/tabs';
 import { ApiService } from '../../../core/services/api.service';
 
 interface SalesTask {
@@ -20,13 +15,14 @@ interface SalesTask {
 @Component({
   selector: 'app-task-list',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule, MatButtonModule, MatCheckboxModule, MatTabsModule],
+  imports: [CommonModule],
   templateUrl: './task-list.component.html',
-  styleUrls: ['./task-list.component.css']
+  styleUrls: ['./task-list.component.scss']
 })
 export class TaskListComponent implements OnInit {
   tasks: SalesTask[] = [];
   loading = true;
+  activeTab: 'pending' | 'completed' = 'pending';
 
   constructor(private apiService: ApiService) {}
 

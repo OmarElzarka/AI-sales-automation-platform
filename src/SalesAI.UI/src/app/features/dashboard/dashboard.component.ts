@@ -1,15 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
 import { ApiService } from '../../core/services/api.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, MatCardModule, MatIconModule],
+  imports: [CommonModule],
   templateUrl: './dashboard.component.html',
-  styleUrls: ['./dashboard.component.css']
+  styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
   kpis: any = null;
@@ -63,11 +61,11 @@ export class DashboardComponent implements OnInit {
 
   getActivityColor(type: string): string {
     switch (type) {
-      case 'LeadCreated': return 'text-blue-500 bg-blue-100';
-      case 'DealWon': return 'text-green-500 bg-green-100';
-      case 'Meeting': return 'text-purple-500 bg-purple-100';
-      case 'Note': return 'text-yellow-500 bg-yellow-100';
-      default: return 'text-gray-500 bg-gray-100';
+      case 'LeadCreated': return 'bg-brand-500';
+      case 'DealWon': return 'bg-emerald-500';
+      case 'Meeting': return 'bg-indigo-500';
+      case 'Note': return 'bg-amber-500';
+      default: return 'bg-surface-400';
     }
   }
 }

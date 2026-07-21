@@ -1,13 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule } from '@angular/material/paginator';
-import { MatSortModule } from '@angular/material/sort';
-import { MatInputModule } from '@angular/material/input';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatChipsModule } from '@angular/material/chips';
 import { ApiService } from '../../../core/services/api.service';
 
 @Component({
@@ -15,17 +8,10 @@ import { ApiService } from '../../../core/services/api.service';
   standalone: true,
   imports: [
     CommonModule, 
-    RouterModule, 
-    MatTableModule, 
-    MatPaginatorModule, 
-    MatSortModule, 
-    MatInputModule, 
-    MatButtonModule, 
-    MatIconModule,
-    MatChipsModule
+    RouterModule
   ],
   templateUrl: './lead-list.component.html',
-  styleUrls: ['./lead-list.component.css']
+  styleUrls: ['./lead-list.component.scss']
 })
 export class LeadListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'company', 'email', 'status', 'score', 'actions'];
@@ -58,19 +44,19 @@ export class LeadListComponent implements OnInit {
 
   getScoreColor(category: string): string {
     switch (category) {
-      case 'Hot': return 'bg-red-100 text-red-800';
-      case 'Warm': return 'bg-yellow-100 text-yellow-800';
-      case 'Cold': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'Hot': return 'bg-rose-100 text-rose-800 border-rose-200';
+      case 'Warm': return 'bg-amber-100 text-amber-800 border-amber-200';
+      case 'Cold': return 'bg-sky-100 text-sky-800 border-sky-200';
+      default: return 'bg-surface-100 text-surface-800 border-surface-200';
     }
   }
 
   getStatusColor(status: string): string {
     switch (status) {
-      case 'New': return 'bg-purple-100 text-purple-800';
-      case 'Contacted': return 'bg-blue-100 text-blue-800';
-      case 'Qualified': return 'bg-green-100 text-green-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case 'New': return 'bg-purple-100 text-purple-800 border-purple-200';
+      case 'Contacted': return 'bg-brand-100 text-brand-800 border-brand-200';
+      case 'Qualified': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+      default: return 'bg-surface-100 text-surface-800 border-surface-200';
     }
   }
 }

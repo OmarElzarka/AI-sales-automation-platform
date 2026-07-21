@@ -1,10 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { CdkDragDrop, DragDropModule, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatBadgeModule } from '@angular/material/badge';
 import { ApiService } from '../../../core/services/api.service';
 
 interface Deal {
@@ -25,9 +21,9 @@ interface Column {
 @Component({
   selector: 'app-deal-board',
   standalone: true,
-  imports: [CommonModule, DragDropModule, MatCardModule, MatIconModule, MatButtonModule, MatBadgeModule],
+  imports: [CommonModule, DragDropModule],
   templateUrl: './deal-board.component.html',
-  styleUrls: ['./deal-board.component.css']
+  styleUrls: ['./deal-board.component.scss']
 })
 export class DealBoardComponent implements OnInit {
   columns: Column[] = [];

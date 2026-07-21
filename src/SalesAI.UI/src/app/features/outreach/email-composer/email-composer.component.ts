@@ -1,12 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatChipsModule } from '@angular/material/chips';
 import { ApiService } from '../../../core/services/api.service';
 
 @Component({
@@ -15,16 +9,10 @@ import { ApiService } from '../../../core/services/api.service';
   imports: [
     CommonModule,
     FormsModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatIconModule,
-    MatButtonModule,
-    MatInputModule,
-    MatFormFieldModule,
-    MatChipsModule
+    ReactiveFormsModule
   ],
   templateUrl: './email-composer.component.html',
-  styleUrls: ['./email-composer.component.css']
+  styleUrls: ['./email-composer.component.scss']
 })
 export class EmailComposerComponent implements OnInit {
   emailForm: FormGroup;

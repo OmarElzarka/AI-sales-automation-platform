@@ -71,12 +71,20 @@ public class ExceptionHandlingMiddleware
         context.Response.ContentType = "application/json";
         context.Response.StatusCode = (int)statusCode;
 
-        var json = JsonSerializer.Serialize(new
+        var problemDetails = new Microsoft.AspNetCore.Mvc.ProblemDetails
         {
-            succeeded = false,
-            message = response.Message,
-            errors = response.Errors
-        }, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+            Status = (int)statusCode,
+            Title = exception.GetType().Name,
+            Detail = response.Message,
+            Instance = context.Request.Path
+        };
+
+        if (response.Errors != null && response.Errors.Any())
+        {
+            problemDetails.Extensions["errors"] = response.Errors;
+        }
+
+        var json = JsonSerializer.Serialize(problemDetails, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
 
         await context.Response.WriteAsync(json);
     }

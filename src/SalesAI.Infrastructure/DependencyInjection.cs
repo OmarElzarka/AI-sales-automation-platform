@@ -13,7 +13,7 @@ using SalesAI.Application.Common.Interfaces;
 using SalesAI.Infrastructure.Identity;
 using SalesAI.Infrastructure.Persistence;
 using SalesAI.Infrastructure.Services;
-
+using MassTransit;
 namespace SalesAI.Infrastructure;
 
 public static class DependencyInjection
@@ -82,6 +82,43 @@ public static class DependencyInjection
         services.AddScoped<IEmailService, EmailService>();
         services.AddScoped<IBackgroundJobService, HangfireBackgroundJobService>();
         
+        // Distributed Cache (Redis)
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = configuration.GetConnectionString("Redis");
+            options.InstanceName = "SalesAI_";
+        });
+
+        // Message Broker (MassTransit with RabbitMQ)
+        services.AddMassTransit(x =>
+        {
+            x.AddConsumer<SalesAI.Application.Features.Leads.Consumers.LeadCreatedConsumer>();
+            var rabbitHost = configuration["MessageBroker:Host"];
+            if (!string.IsNullOrEmpty(rabbitHost))
+            {
+                x.UsingRabbitMq((context, cfg) =>
+                {
+                    var username = configuration["MessageBroker:Username"] ?? "guest";
+                    var password = configuration["MessageBroker:Password"] ?? "guest";
+                    
+                    cfg.Host(rabbitHost, "/", h =>
+                    {
+                        h.Username(username);
+                        h.Password(password);
+                    });
+
+                    cfg.ConfigureEndpoints(context);
+                });
+            }
+            else
+            {
+                x.UsingInMemory((context, cfg) =>
+                {
+                    cfg.ConfigureEndpoints(context);
+                });
+            }
+        });
+
         services.AddHttpClient<IAIService, GeminiAIService>();
 
         // MediatR

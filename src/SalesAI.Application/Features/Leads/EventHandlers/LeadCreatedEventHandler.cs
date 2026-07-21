@@ -7,16 +7,16 @@ namespace SalesAI.Application.Features.Leads.EventHandlers;
 
 public class LeadCreatedEventHandler : INotificationHandler<LeadCreatedEvent>
 {
-    private readonly IBackgroundJobService _backgroundJobService;
+    private readonly MassTransit.IPublishEndpoint _publishEndpoint;
 
-    public LeadCreatedEventHandler(IBackgroundJobService backgroundJobService)
+    public LeadCreatedEventHandler(MassTransit.IPublishEndpoint publishEndpoint)
     {
-        _backgroundJobService = backgroundJobService;
+        _publishEndpoint = publishEndpoint;
     }
 
     public async Task Handle(LeadCreatedEvent notification, CancellationToken cancellationToken)
     {
-        // Enqueue background job to score lead and perform research
-        _backgroundJobService.Enqueue<LeadAutomationJob>(job => job.ProcessNewLeadAsync(notification.LeadId, null));
+        // Publish to RabbitMQ instead of Hangfire
+        await _publishEndpoint.Publish(notification, cancellationToken);
     }
 }

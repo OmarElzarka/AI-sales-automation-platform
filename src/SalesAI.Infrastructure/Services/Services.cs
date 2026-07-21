@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Caching.Distributed;
 using SalesAI.Application.Common.Interfaces;
 
 namespace SalesAI.Infrastructure.Services;
@@ -16,34 +17,40 @@ public class DateTimeProvider : IDateTimeProvider
 
 public class CacheService : ICacheService
 {
-    // In-memory stub for MVP — swap to Redis in Phase 2
-    private readonly Dictionary<string, (object Value, DateTime? Expiry)> _cache = new();
+    private readonly Microsoft.Extensions.Caching.Distributed.IDistributedCache _cache;
 
-    public Task<T?> GetAsync<T>(string key, CancellationToken ct = default)
+    public CacheService(Microsoft.Extensions.Caching.Distributed.IDistributedCache cache)
     {
-        if (_cache.TryGetValue(key, out var entry))
+        _cache = cache;
+    }
+
+    public async Task<T?> GetAsync<T>(string key, CancellationToken ct = default)
+    {
+        var cachedData = await _cache.GetStringAsync(key, ct);
+        if (string.IsNullOrEmpty(cachedData))
         {
-            if (entry.Expiry.HasValue && entry.Expiry.Value < DateTime.UtcNow)
-            {
-                _cache.Remove(key);
-                return Task.FromResult(default(T));
-            }
-            return Task.FromResult((T?)entry.Value);
+            return default;
         }
-        return Task.FromResult(default(T));
+
+        return System.Text.Json.JsonSerializer.Deserialize<T>(cachedData);
     }
 
-    public Task SetAsync<T>(string key, T value, TimeSpan? expiry = null, CancellationToken ct = default)
+    public async Task SetAsync<T>(string key, T value, TimeSpan? expiry = null, CancellationToken ct = default)
     {
-        var expiryTime = expiry.HasValue ? DateTime.UtcNow.Add(expiry.Value) : (DateTime?)null;
-        _cache[key] = (value!, expiryTime);
-        return Task.CompletedTask;
+        var serializedData = System.Text.Json.JsonSerializer.Serialize(value);
+        var options = new Microsoft.Extensions.Caching.Distributed.DistributedCacheEntryOptions();
+        
+        if (expiry.HasValue)
+        {
+            options.SetAbsoluteExpiration(expiry.Value);
+        }
+
+        await _cache.SetStringAsync(key, serializedData, options, ct);
     }
 
-    public Task RemoveAsync(string key, CancellationToken ct = default)
+    public async Task RemoveAsync(string key, CancellationToken ct = default)
     {
-        _cache.Remove(key);
-        return Task.CompletedTask;
+        await _cache.RemoveAsync(key, ct);
     }
 }
 

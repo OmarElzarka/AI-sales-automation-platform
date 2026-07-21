@@ -1,101 +1,154 @@
-<div class="space-y-6 max-w-7xl mx-auto">
+<div class="space-y-6 max-w-7xl mx-auto pb-8">
   <div class="flex items-center justify-between">
-    <h1 class="text-2xl font-semibold text-gray-900">Sales Reports & AI Insights</h1>
-    <div class="flex space-x-2">
-      <button mat-stroked-button>
-        <mat-icon>calendar_today</mat-icon> Last 30 Days
+    <h1 class="text-2xl font-bold text-surface-900 tracking-tight">Sales Reports & AI Insights</h1>
+    <div class="flex space-x-3">
+      <button class="btn-secondary flex items-center">
+        <span class="material-symbols-outlined text-[18px] mr-2 text-surface-500">calendar_today</span> 
+        Last 30 Days
       </button>
-      <button mat-flat-button color="primary">
-        <mat-icon>download</mat-icon> Export PDF
+      <button class="btn-primary flex items-center">
+        <span class="material-symbols-outlined text-[18px] mr-2">download</span> 
+        Export PDF
       </button>
     </div>
   </div>
 
-  <div *ngIf="loading" class="flex justify-center p-12">
-    <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+  <div *ngIf="loading" class="flex justify-center py-20">
+    <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600"></div>
   </div>
 
   <ng-container *ngIf="!loading">
     
     <!-- Top Metrics -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-      <mat-card class="p-6 rounded-xl shadow-sm border border-gray-100">
-        <p class="text-sm font-medium text-gray-500">Total Revenue</p>
-        <p class="text-3xl font-bold text-gray-900 mt-2">${{ metrics.totalRevenue | number }}</p>
-        <div class="mt-2 text-sm text-green-600 flex items-center font-medium">
-          <mat-icon class="text-sm">trending_up</mat-icon> +14.2% YoY
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div class="card p-6 shadow-sm border-surface-200 relative overflow-hidden group hover:border-brand-300 transition-colors">
+        <div class="absolute -right-4 -top-4 w-16 h-16 bg-emerald-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="relative z-10">
+          <p class="text-[13px] font-bold text-surface-500 uppercase tracking-wider mb-1">Total Revenue</p>
+          <p class="text-3xl font-extrabold text-surface-900 tracking-tight">${{ metrics.totalRevenue | number }}</p>
+          <div class="mt-3 text-sm text-emerald-600 flex items-center font-bold bg-emerald-50 inline-flex px-2 py-0.5 rounded">
+            <span class="material-symbols-outlined text-[14px] mr-1">trending_up</span> +14.2% YoY
+          </div>
         </div>
-      </mat-card>
+      </div>
 
-      <mat-card class="p-6 rounded-xl shadow-sm border border-gray-100">
-        <p class="text-sm font-medium text-gray-500">Avg. Deal Size</p>
-        <p class="text-3xl font-bold text-gray-900 mt-2">${{ metrics.avgDealSize | number }}</p>
-        <div class="mt-2 text-sm text-green-600 flex items-center font-medium">
-          <mat-icon class="text-sm">trending_up</mat-icon> +5.1% YoY
+      <div class="card p-6 shadow-sm border-surface-200 relative overflow-hidden group hover:border-brand-300 transition-colors">
+        <div class="absolute -right-4 -top-4 w-16 h-16 bg-emerald-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="relative z-10">
+          <p class="text-[13px] font-bold text-surface-500 uppercase tracking-wider mb-1">Avg. Deal Size</p>
+          <p class="text-3xl font-extrabold text-surface-900 tracking-tight">${{ metrics.avgDealSize | number }}</p>
+          <div class="mt-3 text-sm text-emerald-600 flex items-center font-bold bg-emerald-50 inline-flex px-2 py-0.5 rounded">
+            <span class="material-symbols-outlined text-[14px] mr-1">trending_up</span> +5.1% YoY
+          </div>
         </div>
-      </mat-card>
+      </div>
 
-      <mat-card class="p-6 rounded-xl shadow-sm border border-gray-100">
-        <p class="text-sm font-medium text-gray-500">Avg. Sales Cycle</p>
-        <p class="text-3xl font-bold text-gray-900 mt-2">{{ metrics.salesCycleDays }} Days</p>
-        <div class="mt-2 text-sm text-red-600 flex items-center font-medium">
-          <mat-icon class="text-sm">trending_up</mat-icon> +2 Days
+      <div class="card p-6 shadow-sm border-surface-200 relative overflow-hidden group hover:border-brand-300 transition-colors">
+        <div class="absolute -right-4 -top-4 w-16 h-16 bg-rose-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="relative z-10">
+          <p class="text-[13px] font-bold text-surface-500 uppercase tracking-wider mb-1">Avg. Sales Cycle</p>
+          <p class="text-3xl font-extrabold text-surface-900 tracking-tight">{{ metrics.salesCycleDays }} <span class="text-xl text-surface-400 font-medium ml-1 tracking-normal">Days</span></p>
+          <div class="mt-3 text-sm text-rose-600 flex items-center font-bold bg-rose-50 inline-flex px-2 py-0.5 rounded">
+            <span class="material-symbols-outlined text-[14px] mr-1">trending_up</span> +2 Days
+          </div>
         </div>
-      </mat-card>
+      </div>
 
-      <mat-card class="p-6 rounded-xl shadow-sm border border-gray-100">
-        <p class="text-sm font-medium text-gray-500">Global Win Rate</p>
-        <p class="text-3xl font-bold text-gray-900 mt-2">{{ metrics.winRate }}%</p>
-        <div class="mt-2 text-sm text-green-600 flex items-center font-medium">
-          <mat-icon class="text-sm">trending_up</mat-icon> +3.4% YoY
+      <div class="card p-6 shadow-sm border-surface-200 relative overflow-hidden group hover:border-brand-300 transition-colors">
+        <div class="absolute -right-4 -top-4 w-16 h-16 bg-emerald-50 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"></div>
+        <div class="relative z-10">
+          <p class="text-[13px] font-bold text-surface-500 uppercase tracking-wider mb-1">Global Win Rate</p>
+          <p class="text-3xl font-extrabold text-surface-900 tracking-tight">{{ metrics.winRate }}%</p>
+          <div class="mt-3 text-sm text-emerald-600 flex items-center font-bold bg-emerald-50 inline-flex px-2 py-0.5 rounded">
+            <span class="material-symbols-outlined text-[14px] mr-1">trending_up</span> +3.4% YoY
+          </div>
         </div>
-      </mat-card>
+      </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
       
       <!-- AI Insights Panel -->
-      <mat-card class="col-span-1 lg:col-span-3 p-6 rounded-xl shadow-sm bg-gradient-to-r from-blue-50 to-indigo-50 border border-blue-100">
-        <div class="flex items-center gap-2 mb-4">
-          <mat-icon class="text-indigo-600">auto_awesome</mat-icon>
-          <h2 class="text-lg font-bold text-gray-900">AI Growth Insights</h2>
-        </div>
+      <div class="col-span-1 lg:col-span-3 card p-6 shadow-sm bg-gradient-to-br from-indigo-50 via-white to-brand-50 border-indigo-100 relative overflow-hidden">
+        <!-- Decorative bg -->
+        <div class="absolute right-0 top-0 w-64 h-64 bg-indigo-200 rounded-full mix-blend-multiply filter blur-3xl opacity-20 pointer-events-none"></div>
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div *ngFor="let insight of aiInsights" class="bg-white p-4 rounded-lg shadow-sm border border-indigo-50">
-            <mat-icon class="text-indigo-400 mb-2">lightbulb</mat-icon>
-            <p class="text-sm text-gray-700 leading-relaxed">{{ insight }}</p>
+        <div class="relative z-10">
+          <div class="flex items-center gap-2 mb-6">
+            <div class="h-8 w-8 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center shadow-sm border border-indigo-200">
+              <span class="material-symbols-outlined text-[18px]">auto_awesome</span>
+            </div>
+            <h2 class="text-xl font-bold text-surface-900 tracking-tight">AI Growth Insights</h2>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div *ngFor="let insight of aiInsights" class="bg-white/80 backdrop-blur p-5 rounded-xl shadow-sm border border-indigo-50/80 hover:shadow-md hover:-translate-y-1 transition-all duration-300 group">
+              <div class="h-8 w-8 rounded-full bg-brand-50 text-brand-600 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-[18px]">lightbulb</span>
+              </div>
+              <p class="text-[14px] font-medium text-surface-700 leading-relaxed">{{ insight }}</p>
+            </div>
           </div>
         </div>
-      </mat-card>
+      </div>
 
       <!-- Charts Mockups -->
-      <mat-card class="col-span-1 lg:col-span-2 p-6 rounded-xl shadow-sm border border-gray-100">
-        <h3 class="text-lg font-bold text-gray-900 mb-6">Revenue Growth (YTD)</h3>
+      <div class="col-span-1 lg:col-span-2 card p-6 shadow-sm border-surface-200">
+        <div class="flex items-center justify-between mb-8">
+          <h3 class="text-lg font-bold text-surface-900 tracking-tight">Revenue Growth (YTD)</h3>
+          <span class="text-xs font-bold text-brand-600 bg-brand-50 px-2 py-1 rounded border border-brand-100 uppercase tracking-wider">Projected</span>
+        </div>
         <!-- CSS Mock Bar Chart -->
-        <div class="flex items-end space-x-4 h-64 border-b border-gray-200 pb-2">
-          <div *ngFor="let rev of metrics.revenueByMonth; let i = index" class="flex-1 flex flex-col items-center gap-2">
-            <div class="w-full bg-blue-500 hover:bg-blue-600 rounded-t-sm transition-all duration-300" [style.height.%]="(rev / 250) * 100"></div>
-            <span class="text-xs text-gray-500 font-medium">M{{ i + 1 }}</span>
+        <div class="flex items-end space-x-2 sm:space-x-4 h-64 border-b border-surface-200 pb-2 relative">
+          <!-- Grid lines -->
+          <div class="absolute inset-0 flex flex-col justify-between pointer-events-none pb-2">
+            <div class="w-full border-t border-surface-100 border-dashed"></div>
+            <div class="w-full border-t border-surface-100 border-dashed"></div>
+            <div class="w-full border-t border-surface-100 border-dashed"></div>
+            <div class="w-full border-t border-surface-100 border-dashed"></div>
+            <div class="w-full border-t-0"></div>
+          </div>
+          
+          <div *ngFor="let rev of metrics.revenueByMonth; let i = index" class="flex-1 flex flex-col items-center gap-2 group relative z-10 cursor-pointer">
+            <!-- Tooltip -->
+            <div class="absolute -top-10 opacity-0 group-hover:opacity-100 transition-opacity bg-surface-900 text-white text-xs font-bold px-2 py-1 rounded shadow-lg pointer-events-none whitespace-nowrap z-20">
+              ${{rev}}k
+              <div class="absolute -bottom-1 left-1/2 transform -translate-x-1/2 w-2 h-2 bg-surface-900 rotate-45"></div>
+            </div>
+            
+            <div class="w-full bg-gradient-to-t from-brand-500 to-brand-400 group-hover:from-brand-600 group-hover:to-brand-500 rounded-t shadow-sm transition-all duration-300" [style.height.%]="(rev / 250) * 100"></div>
+            <span class="text-[11px] text-surface-500 font-bold tracking-wider">M{{ i + 1 }}</span>
           </div>
         </div>
-      </mat-card>
+      </div>
 
       <!-- Leaderboard -->
-      <mat-card class="col-span-1 p-6 rounded-xl shadow-sm border border-gray-100">
-        <h3 class="text-lg font-bold text-gray-900 mb-6">Top Performers</h3>
-        <div class="space-y-4">
-          <div *ngFor="let rep of metrics.topPerformers; let i = index" class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+      <div class="col-span-1 card p-6 shadow-sm border-surface-200">
+        <h3 class="text-lg font-bold text-surface-900 tracking-tight mb-6">Top Performers</h3>
+        <div class="space-y-3">
+          <div *ngFor="let rep of metrics.topPerformers; let i = index" class="flex items-center justify-between p-3.5 bg-surface-50 rounded-xl hover:bg-surface-100 transition-colors border border-transparent hover:border-surface-200 group">
             <div class="flex items-center gap-3">
-              <div class="h-8 w-8 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-xs">
+              <div class="h-9 w-9 rounded-full font-bold flex items-center justify-center text-[13px] shadow-sm border"
+                   [ngClass]="{
+                     'bg-amber-100 text-amber-700 border-amber-200': i === 0,
+                     'bg-slate-100 text-slate-700 border-slate-200': i === 1,
+                     'bg-orange-100 text-orange-700 border-orange-200': i === 2,
+                     'bg-surface-200 text-surface-600 border-surface-300': i > 2
+                   }">
                 #{{ i + 1 }}
               </div>
-              <span class="font-medium text-gray-900">{{ rep.name }}</span>
+              <div>
+                <span class="block text-sm font-bold text-surface-900 group-hover:text-brand-600 transition-colors">{{ rep.name }}</span>
+                <span class="block text-[11px] text-surface-500 font-medium">Sales Representative</span>
+              </div>
             </div>
-            <span class="font-bold text-gray-700">${{ rep.revenue / 1000 }}k</span>
+            <div class="text-right">
+              <span class="block font-extrabold text-surface-900 text-[15px]">${{ rep.revenue / 1000 }}k</span>
+              <span class="block text-[11px] text-emerald-600 font-bold">+{{ (5 - i) * 2 }}%</span>
+            </div>
           </div>
         </div>
-      </mat-card>
+      </div>
 
     </div>
   </ng-container>

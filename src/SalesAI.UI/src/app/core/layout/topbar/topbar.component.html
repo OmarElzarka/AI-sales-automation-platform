@@ -1,57 +1,63 @@
-<header class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm relative z-50">
+<header class="flex items-center justify-between px-6 py-4 bg-white border-b border-surface-200 relative z-50">
   <div class="flex items-center w-1/2">
     <!-- Global Search Bar -->
     <div class="relative w-full max-w-lg">
       <span class="absolute inset-y-0 left-0 flex items-center pl-3">
-        <mat-icon class="text-gray-400">search</mat-icon>
+        <span class="material-symbols-outlined text-surface-400 text-[20px]">search</span>
       </span>
       <input type="text" 
              [(ngModel)]="searchQuery"
              (input)="onSearch()"
              (blur)="closeSearch()"
-             class="w-full py-2 pl-10 pr-4 text-gray-700 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-all" 
+             class="w-full py-2 pl-10 pr-4 text-sm text-surface-900 bg-surface-50 border border-surface-200 rounded-md focus:outline-none focus:bg-white focus:ring-2 focus:ring-brand-500 focus:border-brand-500 transition-all placeholder:text-surface-400" 
              placeholder="Search leads, deals, or contacts (Press '/' to focus)">
              
       <!-- Search Results Dropdown -->
-      <div *ngIf="showResults" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
+      <div *ngIf="showResults" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-lg ring-1 ring-black ring-opacity-5 overflow-hidden">
         <div class="p-2">
-          <h4 class="text-xs font-bold text-gray-500 uppercase px-3 py-2">Quick Results</h4>
-          <a *ngFor="let res of mockResults" [routerLink]="res.route" class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-md cursor-pointer">
+          <h4 class="text-xs font-semibold text-surface-500 uppercase px-3 py-2">Quick Results</h4>
+          <a *ngFor="let res of mockResults" [routerLink]="res.route" class="flex items-center justify-between p-3 hover:bg-surface-50 rounded-md cursor-pointer transition-colors">
             <div class="flex items-center gap-3">
-              <mat-icon class="text-gray-400 text-sm">{{ res.type === 'Lead' ? 'person' : 'monetization_on' }}</mat-icon>
+              <span class="material-symbols-outlined text-surface-400 text-[18px]">{{ res.type === 'Lead' ? 'person' : 'monetization_on' }}</span>
               <div>
-                <p class="text-sm font-medium text-gray-900">{{ res.name }}</p>
-                <p class="text-xs text-gray-500">{{ res.sub }}</p>
+                <p class="text-sm font-medium text-surface-900">{{ res.name }}</p>
+                <p class="text-xs text-surface-500">{{ res.sub }}</p>
               </div>
             </div>
-            <span class="text-xs font-medium px-2 py-1 bg-gray-100 rounded text-gray-600">{{ res.type }}</span>
+            <span class="text-[10px] font-medium px-2 py-0.5 bg-surface-100 rounded text-surface-600 uppercase tracking-wide">{{ res.type }}</span>
           </a>
         </div>
-        <div class="bg-gray-50 p-3 border-t border-gray-100 text-center">
-          <span class="text-xs text-blue-600 font-medium cursor-pointer hover:underline">View all results for "{{ searchQuery }}"</span>
+        <div class="bg-surface-50 p-3 border-t border-surface-100 text-center">
+          <span class="text-xs text-brand-600 font-medium cursor-pointer hover:text-brand-700">View all results for "{{ searchQuery }}"</span>
         </div>
       </div>
     </div>
   </div>
 
   <div class="flex items-center gap-4">
-    <button mat-icon-button class="text-gray-500 hover:text-gray-700">
-      <mat-icon>notifications</mat-icon>
+    <button class="relative p-2 text-surface-400 hover:text-surface-600 hover:bg-surface-50 rounded-full transition-colors">
+      <span class="material-symbols-outlined">notifications</span>
+      <span class="absolute top-1.5 right-1.5 block h-2 w-2 rounded-full bg-red-500 ring-2 ring-white"></span>
     </button>
     
-    <button mat-icon-button [matMenuTriggerFor]="profileMenu" class="h-10 w-10 rounded-full bg-blue-600 text-white flex items-center justify-center font-bold">
-      {{ userInitial }}
-    </button>
-
-    <mat-menu #profileMenu="matMenu">
-      <button mat-menu-item>
-        <mat-icon>account_circle</mat-icon>
-        <span>Profile</span>
+    <div class="relative group">
+      <button class="flex items-center justify-center h-9 w-9 rounded-full bg-brand-600 text-white text-sm font-medium hover:bg-brand-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-500 transition-colors">
+        {{ userInitial }}
       </button>
-      <button mat-menu-item>
-        <mat-icon>settings</mat-icon>
-        <span>Settings</span>
-      </button>
-    </mat-menu>
+      
+      <!-- Fake dropdown on hover for MVP instead of mat-menu -->
+      <div class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg ring-1 ring-black ring-opacity-5 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 transform origin-top-right z-50">
+        <div class="py-1">
+          <a href="#" class="flex items-center px-4 py-2 text-sm text-surface-700 hover:bg-surface-50">
+            <span class="material-symbols-outlined mr-3 text-[18px] text-surface-400">account_circle</span>
+            Profile
+          </a>
+          <a href="#" class="flex items-center px-4 py-2 text-sm text-surface-700 hover:bg-surface-50">
+            <span class="material-symbols-outlined mr-3 text-[18px] text-surface-400">settings</span>
+            Settings
+          </a>
+        </div>
+      </div>
+    </div>
   </div>
 </header>

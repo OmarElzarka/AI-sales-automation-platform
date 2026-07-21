@@ -9,6 +9,6 @@ import { TopbarComponent } from '../topbar/topbar.component';
   standalone: true,
   imports: [CommonModule, RouterModule, SidebarComponent, TopbarComponent],
   templateUrl: './main-layout.component.html',
-  styleUrls: ['./main-layout.component.css']
+  styleUrls: ['./main-layout.component.scss']
 })
 export class MainLayoutComponent {}

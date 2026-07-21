@@ -12,14 +12,24 @@ public record GetDashboardDataQuery(Guid? UserId = null) : IRequest<Result<Dashb
 public class GetDashboardDataQueryHandler : IRequestHandler<GetDashboardDataQuery, Result<DashboardDataDto>>
 {
     private readonly IApplicationDbContext _context;
+    private readonly ICacheService _cache;
 
-    public GetDashboardDataQueryHandler(IApplicationDbContext context)
+    public GetDashboardDataQueryHandler(IApplicationDbContext context, ICacheService cache)
     {
         _context = context;
+        _cache = cache;
     }
 
     public async Task<Result<DashboardDataDto>> Handle(GetDashboardDataQuery request, CancellationToken cancellationToken)
     {
+        string cacheKey = request.UserId.HasValue ? $"dashboard_data_{request.UserId.Value}" : "dashboard_data_all";
+        
+        var cachedResult = await _cache.GetAsync<DashboardDataDto>(cacheKey, cancellationToken);
+        if (cachedResult != null)
+        {
+            return Result<DashboardDataDto>.Success(cachedResult);
+        }
+
         var leadsQuery = _context.Leads.AsNoTracking();
         var dealsQuery = _context.Deals.AsNoTracking();
         var tasksQuery = _context.SalesTasks.AsNoTracking();
@@ -73,6 +83,8 @@ public class GetDashboardDataQueryHandler : IRequestHandler<GetDashboardDataQuer
             .ToListAsync(cancellationToken);
 
         var dashboardData = new DashboardDataDto(kpis, fullFunnel, sourceData);
+
+        await _cache.SetAsync(cacheKey, dashboardData, TimeSpan.FromMinutes(5), cancellationToken);
 
         return Result<DashboardDataDto>.Success(dashboardData);
     }

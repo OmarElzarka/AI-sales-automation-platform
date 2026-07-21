@@ -1,59 +1,84 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-  <mat-card class="w-full max-w-lg p-8 shadow-xl rounded-2xl">
-    <div class="text-center mb-8">
-      <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">Create an Account</h2>
-      <p class="mt-2 text-sm text-gray-600">Join SalesAI Copilot</p>
-    </div>
+<div class="min-h-screen flex items-center justify-center bg-surface-50 py-12 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+  <!-- Decorative background elements -->
+  <div class="absolute top-0 -left-4 w-72 h-72 bg-brand-400 rounded-full mix-blend-multiply filter blur-2xl opacity-10 animate-blob"></div>
+  <div class="absolute top-0 -right-4 w-72 h-72 bg-indigo-400 rounded-full mix-blend-multiply filter blur-2xl opacity-10 animate-blob animation-delay-2000"></div>
+  <div class="absolute -bottom-8 left-20 w-72 h-72 bg-emerald-400 rounded-full mix-blend-multiply filter blur-2xl opacity-10 animate-blob animation-delay-4000"></div>
 
-    <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md">
-      <div class="flex">
-        <div class="ml-3">
-          <p class="text-sm text-red-700">{{ error }}</p>
+  <div class="w-full max-w-lg relative z-10">
+    <div class="card p-8 sm:p-10 shadow-xl border-surface-200/60 bg-white/80 backdrop-blur-sm">
+      <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center h-12 w-12 rounded-xl bg-gradient-to-br from-brand-500 to-indigo-600 mb-4 shadow-sm">
+          <span class="material-symbols-outlined text-white text-2xl">person_add</span>
+        </div>
+        <h2 class="text-3xl font-bold text-surface-900 tracking-tight">Create an Account</h2>
+        <p class="mt-2 text-sm text-surface-500 font-medium">Join SalesAI Copilot</p>
+      </div>
+
+      <div *ngIf="error" class="bg-rose-50 border border-rose-200 p-4 mb-6 rounded-lg shadow-sm">
+        <div class="flex items-center">
+          <span class="material-symbols-outlined text-rose-500 text-[18px] mr-2">error</span>
+          <p class="text-sm text-rose-700 font-medium">{{ error }}</p>
         </div>
       </div>
-    </div>
 
-    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-4">
-      <div class="grid grid-cols-2 gap-4">
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>First Name</mat-label>
-          <input matInput formControlName="firstName" required>
-        </mat-form-field>
-        <mat-form-field appearance="outline" class="w-full">
-          <mat-label>Last Name</mat-label>
-          <input matInput formControlName="lastName" required>
-        </mat-form-field>
+      <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="space-y-5">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label for="firstName" class="block text-sm font-semibold text-surface-700 mb-1">First Name</label>
+            <input id="firstName" formControlName="firstName" type="text" class="input-field" placeholder="John" required>
+          </div>
+          <div>
+            <label for="lastName" class="block text-sm font-semibold text-surface-700 mb-1">Last Name</label>
+            <input id="lastName" formControlName="lastName" type="text" class="input-field" placeholder="Doe" required>
+          </div>
+        </div>
+
+        <div>
+          <label for="email" class="block text-sm font-semibold text-surface-700 mb-1">Email address</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="material-symbols-outlined text-surface-400 text-[18px]">mail</span>
+            </div>
+            <input id="email" formControlName="email" type="email" class="input-field pl-10" placeholder="you@company.com" required>
+          </div>
+          <p class="mt-1 text-xs text-rose-500" *ngIf="registerForm.get('email')?.hasError('email') && registerForm.get('email')?.touched">Please enter a valid email</p>
+        </div>
+
+        <div>
+          <label for="password" class="block text-sm font-semibold text-surface-700 mb-1">Password</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="material-symbols-outlined text-surface-400 text-[18px]">lock</span>
+            </div>
+            <input id="password" formControlName="password" type="password" class="input-field pl-10" placeholder="••••••••" required>
+          </div>
+        </div>
+
+        <div>
+          <label for="confirmPassword" class="block text-sm font-semibold text-surface-700 mb-1">Confirm Password</label>
+          <div class="relative">
+            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+              <span class="material-symbols-outlined text-surface-400 text-[18px]">lock</span>
+            </div>
+            <input id="confirmPassword" formControlName="confirmPassword" type="password" class="input-field pl-10" placeholder="••••••••" required>
+          </div>
+          <p class="mt-1 text-xs text-rose-500" *ngIf="registerForm.hasError('mismatch') && registerForm.get('confirmPassword')?.touched">Passwords do not match</p>
+        </div>
+
+        <div class="pt-2">
+          <button type="submit" [disabled]="registerForm.invalid || loading" class="w-full btn-primary py-2.5 text-base shadow-md disabled:opacity-70 disabled:cursor-not-allowed">
+            <span *ngIf="loading" class="material-symbols-outlined animate-spin text-[18px] mr-2">progress_activity</span>
+            {{ loading ? 'Creating account...' : 'Create account' }}
+          </button>
+        </div>
+      </form>
+
+      <div class="mt-8 pt-6 border-t border-surface-200 text-center">
+        <p class="text-sm text-surface-600 font-medium">
+          Already have an account? 
+          <a routerLink="/login" class="font-semibold text-brand-600 hover:text-brand-700 transition-colors">Sign in</a>
+        </p>
       </div>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Email address</mat-label>
-        <input matInput formControlName="email" type="email" required>
-        <mat-error *ngIf="registerForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Password</mat-label>
-        <input matInput formControlName="password" type="password" required>
-      </mat-form-field>
-
-      <mat-form-field appearance="outline" class="w-full">
-        <mat-label>Confirm Password</mat-label>
-        <input matInput formControlName="confirmPassword" type="password" required>
-        <mat-error *ngIf="registerForm.hasError('mismatch')">Passwords do not match</mat-error>
-      </mat-form-field>
-
-      <div class="pt-2">
-        <button mat-flat-button color="primary" class="w-full py-2 text-lg rounded-lg" type="submit" [disabled]="registerForm.invalid || loading">
-          {{ loading ? 'Creating account...' : 'Create account' }}
-        </button>
-      </div>
-    </form>
-
-    <div class="mt-6 text-center">
-      <p class="text-sm text-gray-600">
-        Already have an account? 
-        <a routerLink="/login" class="font-medium text-blue-600 hover:text-blue-500">Sign in</a>
-      </p>
     </div>
-  </mat-card>
+  </div>
 </div>
