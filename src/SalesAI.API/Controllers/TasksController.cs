@@ -74,6 +74,17 @@ public class TasksController : ControllerBase
         return NoContent();
     }
 
+    [HttpPut("{id}/status")]
+    public async Task<IActionResult> UpdateTaskStatus(Guid id, [FromBody] UpdateTaskStatusRequest request)
+    {
+        var result = await _mediator.Send(new UpdateTaskStatusCommand(id, request.Status));
+        
+        if (!result.Succeeded)
+            return BadRequest(new { result.Message });
+
+        return NoContent();
+    }
+
     [HttpDelete("{id}")]
     public async Task<IActionResult> DeleteTask(Guid id)
     {
@@ -84,4 +95,9 @@ public class TasksController : ControllerBase
 
         return NoContent();
     }
+}
+
+public class UpdateTaskStatusRequest
+{
+    public string Status { get; set; } = string.Empty;
 }

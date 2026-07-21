@@ -1,11 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
 import { ApiService } from '../../core/services/api.service';
+import { forkJoin } from 'rxjs';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, RouterModule],
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss']
 })
@@ -13,7 +15,9 @@ export class DashboardComponent implements OnInit {
   kpis: any = null;
   activities: any[] = [];
   funnel: any[] = [];
+  leadSources: any[] = [];
   loading = true;
+  error: string | null = null;
 
   constructor(private apiService: ApiService) {}
 
@@ -22,28 +26,33 @@ export class DashboardComponent implements OnInit {
   }
 
   loadDashboardData() {
-    // In a real app, we would use forkJoin or individual requests.
-    // For now, let's mock some data if the backend isn't ready or just try to fetch.
-    this.apiService.get('/dashboard/kpis').subscribe({
-      next: (data: any) => {
-        this.kpis = data;
+    this.loading = true;
+    this.error = null;
+
+    forkJoin({
+      dashboard: this.apiService.get<any>('/dashboard/data'),
+      activities: this.apiService.get<any[]>('/dashboard/activity', { take: 10 })
+    }).subscribe({
+      next: ({ dashboard, activities }) => {
+        this.kpis = {
+          totalLeads: dashboard.kpis.totalLeads,
+          activeDeals: dashboard.kpis.totalDeals,
+          winRate: dashboard.kpis.winRatePercentage,
+          revenuePipeline: dashboard.kpis.totalRevenue,
+          activeTasks: dashboard.kpis.activeTasks
+        };
+        this.funnel = (dashboard.pipelineFunnel || []).filter((s: any) => s.stageName !== 'Won' && s.stageName !== 'Lost').map((s: any) => ({
+          stage: s.stageName,
+          count: s.count,
+          value: s.totalValue
+        }));
+        this.leadSources = dashboard.leadSources || [];
+        this.activities = activities || [];
         this.loading = false;
       },
-      error: () => {
-        // Fallback mock data for visual demonstration
-        this.kpis = { totalLeads: 142, activeDeals: 28, winRate: 65.4, revenuePipeline: 450000 };
-        this.activities = [
-          { type: 'LeadCreated', title: 'New Lead: John Doe', createdAt: new Date().toISOString() },
-          { type: 'DealWon', title: 'Closed: Acme Corp', createdAt: new Date().toISOString() },
-          { type: 'Meeting', title: 'Discovery Call with TechCorp', createdAt: new Date().toISOString() }
-        ];
-        this.funnel = [
-          { stage: 'NewLead', count: 45 },
-          { stage: 'Qualified', count: 30 },
-          { stage: 'Proposal', count: 15 },
-          { stage: 'Negotiation', count: 8 },
-          { stage: 'Won', count: 5 }
-        ];
+      error: (err) => {
+        console.error('Dashboard load error:', err);
+        this.error = 'Failed to load dashboard data.';
         this.loading = false;
       }
     });
@@ -52,9 +61,12 @@ export class DashboardComponent implements OnInit {
   getActivityIcon(type: string): string {
     switch (type) {
       case 'LeadCreated': return 'person_add';
+      case 'LeadScored': return 'psychology';
       case 'DealWon': return 'emoji_events';
       case 'Meeting': return 'event';
       case 'Note': return 'note';
+      case 'Email': return 'email';
+      case 'Call': return 'phone';
       default: return 'notifications';
     }
   }
@@ -62,10 +74,14 @@ export class DashboardComponent implements OnInit {
   getActivityColor(type: string): string {
     switch (type) {
       case 'LeadCreated': return 'bg-brand-500';
+      case 'LeadScored': return 'bg-purple-500';
       case 'DealWon': return 'bg-emerald-500';
       case 'Meeting': return 'bg-indigo-500';
       case 'Note': return 'bg-amber-500';
+      case 'Email': return 'bg-sky-500';
+      case 'Call': return 'bg-teal-500';
       default: return 'bg-surface-400';
     }
   }
 }
+

@@ -1,4 +1,5 @@
 using System.Reflection;
+using MediatR;
 using Microsoft.EntityFrameworkCore;
 using SalesAI.Application.Common.Interfaces;
 using SalesAI.Domain.Common;
@@ -10,14 +11,17 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
 {
     private readonly ICurrentUserService? _currentUserService;
     private readonly IDateTimeProvider? _dateTimeProvider;
+    private readonly IPublisher? _publisher;
 
     public ApplicationDbContext(
         DbContextOptions<ApplicationDbContext> options,
         ICurrentUserService? currentUserService = null,
-        IDateTimeProvider? dateTimeProvider = null) : base(options)
+        IDateTimeProvider? dateTimeProvider = null,
+        IPublisher? publisher = null) : base(options)
     {
         _currentUserService = currentUserService;
         _dateTimeProvider = dateTimeProvider;
+        _publisher = publisher;
     }
 
     public DbSet<User> Users => Set<User>();
@@ -64,7 +68,32 @@ public class ApplicationDbContext : DbContext, IApplicationDbContext
             }
         }
 
-        // Apply global query filter for soft deletes
-        return await base.SaveChangesAsync(cancellationToken);
+        // Collect domain events before saving
+        var entitiesWithEvents = ChangeTracker.Entries<BaseEntity>()
+            .Where(e => e.Entity.DomainEvents.Any())
+            .Select(e => e.Entity)
+            .ToList();
+
+        var domainEvents = entitiesWithEvents
+            .SelectMany(e => e.DomainEvents)
+            .ToList();
+
+        // Clear events from entities before dispatching to avoid infinite loops
+        entitiesWithEvents.ForEach(e => e.ClearDomainEvents());
+
+        // Save to database first
+        var result = await base.SaveChangesAsync(cancellationToken);
+
+        // Then dispatch domain events (after successful save)
+        if (_publisher != null)
+        {
+            foreach (var domainEvent in domainEvents)
+            {
+                await _publisher.Publish(domainEvent, cancellationToken);
+            }
+        }
+
+        return result;
     }
 }
+

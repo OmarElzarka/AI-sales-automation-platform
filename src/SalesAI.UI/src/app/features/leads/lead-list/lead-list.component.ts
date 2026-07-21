@@ -17,6 +17,7 @@ export class LeadListComponent implements OnInit {
   displayedColumns: string[] = ['name', 'company', 'email', 'status', 'score', 'actions'];
   dataSource: any[] = [];
   loading = true;
+  error: string | null = null;
 
   constructor(private apiService: ApiService) {}
 
@@ -25,20 +26,27 @@ export class LeadListComponent implements OnInit {
   }
 
   loadLeads() {
+    this.loading = true;
+    this.error = null;
     this.apiService.get('/leads').subscribe({
       next: (data: any) => {
-        this.dataSource = data.items || data;
+        this.dataSource = data.items || data || [];
         this.loading = false;
       },
-      error: () => {
-        // Mock data for UI development
-        this.dataSource = [
-          { id: '1', firstName: 'John', lastName: 'Doe', companyName: 'Acme Corp', email: 'john@acme.com', status: 'New', scoreCategory: 'Hot', scoreNumeric: 95 },
-          { id: '2', firstName: 'Jane', lastName: 'Smith', companyName: 'TechFlow', email: 'jane@techflow.io', status: 'Contacted', scoreCategory: 'Warm', scoreNumeric: 65 },
-          { id: '3', firstName: 'Bob', lastName: 'Johnson', companyName: 'Global Inc', email: 'bob@global.com', status: 'Qualified', scoreCategory: 'Cold', scoreNumeric: 25 },
-        ];
+      error: (err) => {
+        console.error('Failed to load leads:', err);
+        this.error = 'Failed to load leads.';
+        this.dataSource = [];
         this.loading = false;
       }
+    });
+  }
+
+  deleteLead(id: string) {
+    if (!confirm('Are you sure you want to delete this lead?')) return;
+    this.apiService.delete(`/leads/${id}`).subscribe({
+      next: () => this.loadLeads(),
+      error: (err) => console.error('Delete failed:', err)
     });
   }
 
@@ -56,7 +64,11 @@ export class LeadListComponent implements OnInit {
       case 'New': return 'bg-purple-100 text-purple-800 border-purple-200';
       case 'Contacted': return 'bg-brand-100 text-brand-800 border-brand-200';
       case 'Qualified': return 'bg-emerald-100 text-emerald-800 border-emerald-200';
+      case 'Unqualified': return 'bg-surface-100 text-surface-800 border-surface-200';
+      case 'Converted': return 'bg-teal-100 text-teal-800 border-teal-200';
+      case 'Lost': return 'bg-rose-100 text-rose-800 border-rose-200';
       default: return 'bg-surface-100 text-surface-800 border-surface-200';
     }
   }
 }
+

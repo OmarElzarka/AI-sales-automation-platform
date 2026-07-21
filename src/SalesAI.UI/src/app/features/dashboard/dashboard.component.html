@@ -15,6 +15,12 @@
     <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-brand-600"></div>
   </div>
 
+  <div *ngIf="error" class="card p-8 text-center">
+    <span class="material-symbols-outlined text-4xl text-rose-400 mb-4">error</span>
+    <p class="text-surface-600">{{ error }}</p>
+    <button class="btn-primary mt-4" (click)="loadDashboardData()">Retry</button>
+  </div>
+
   <ng-container *ngIf="!loading">
     <!-- KPI Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

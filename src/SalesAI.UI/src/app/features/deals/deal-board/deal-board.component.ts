@@ -28,6 +28,7 @@ interface Column {
 export class DealBoardComponent implements OnInit {
   columns: Column[] = [];
   loading = true;
+  error: string | null = null;
 
   constructor(private apiService: ApiService) {}
 
@@ -36,48 +37,26 @@ export class DealBoardComponent implements OnInit {
   }
 
   loadDeals() {
-    this.apiService.get('/deals').subscribe({
+    this.loading = true;
+    this.error = null;
+    this.apiService.get<any>('/deals/pipeline').subscribe({
       next: (data: any) => {
-        this.columns = this.groupDeals(data);
+        // Backend returns Dictionary<string, List<DealDto>> which translates to an object in JS
+        const stages = ['Lead', 'Qualified', 'Proposal', 'Negotiation', 'Won', 'Lost'];
+        this.columns = stages.map(stage => ({
+          id: stage,
+          title: stage,
+          deals: data[stage] || []
+        }));
         this.loading = false;
       },
-      error: () => {
-        // Mock data
-        this.columns = [
-          {
-            id: 'Lead', title: 'Lead', deals: [
-              { id: '1', title: 'Enterprise License', companyName: 'Acme Corp', value: 25000, contactName: 'John Doe', aiProbability: 35 },
-              { id: '2', title: 'Basic Setup', companyName: 'Startup Inc', value: 5000, contactName: 'Jane Smith', aiProbability: 60 }
-            ]
-          },
-          {
-            id: 'Qualified', title: 'Qualified', deals: [
-              { id: '3', title: 'Data Migration', companyName: 'TechFlow', value: 12000, contactName: 'Bob Johnson', aiProbability: 75 }
-            ]
-          },
-          {
-            id: 'Proposal', title: 'Proposal', deals: [
-              { id: '4', title: 'Custom Implementation', companyName: 'Global Co', value: 45000, contactName: 'Alice Brown', aiProbability: 90 }
-            ]
-          },
-          {
-            id: 'Won', title: 'Won', deals: []
-          }
-        ];
+      error: (err) => {
+        console.error('Failed to load deals pipeline:', err);
+        this.error = 'Failed to load pipeline data.';
+        this.columns = [];
         this.loading = false;
       }
     });
-  }
-
-  groupDeals(deals: any[]): Column[] {
-    const defaultCols: Column[] = [
-      { id: 'Lead', title: 'Lead', deals: [] },
-      { id: 'Qualified', title: 'Qualified', deals: [] },
-      { id: 'Proposal', title: 'Proposal', deals: [] },
-      { id: 'Won', title: 'Won', deals: [] }
-    ];
-    // Normally loop through deals and push to respective columns
-    return defaultCols;
   }
 
   drop(event: CdkDragDrop<Deal[]>) {
@@ -92,10 +71,16 @@ export class DealBoardComponent implements OnInit {
       );
       
       const movedDeal = event.container.data[event.currentIndex];
-      const newStage = event.container.id; // Usually mapped from column data
+      const newStage = event.container.id; // Map container id to stage string
       
       // Update backend
-      // this.apiService.put(`/deals/${movedDeal.id}/stage`, { stage: newStage }).subscribe();
+      this.apiService.put(`/deals/${movedDeal.id}/stage`, { dealId: movedDeal.id, toStage: newStage }).subscribe({
+        error: (err) => {
+          console.error('Failed to update deal stage:', err);
+          // Revert if failed (simple reload for now)
+          this.loadDeals();
+        }
+      });
     }
   }
 }

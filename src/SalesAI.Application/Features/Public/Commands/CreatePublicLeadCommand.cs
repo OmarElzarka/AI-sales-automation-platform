@@ -106,20 +106,11 @@ public class CreatePublicLeadCommandHandler : IRequestHandler<CreatePublicLeadCo
                 new PublicLeadResponse(existingLead.Id, "Thank you! We already have your information and will be in touch soon.", "Received"));
         }
 
-        // Create the lead
-        var lead = new Lead
-        {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Email = request.BusinessEmail.ToLowerInvariant(),
-            Phone = request.Phone,
-            CompanyId = company.Id,
-            JobTitle = request.InterestedProduct,
-            Source = LeadSource.Website,
-            Status = LeadStatus.New,
-            AssignedToId = assignedUser.Id,
-            ScoreNumeric = 0
-        };
+        // Create the lead using factory method (triggers domain events)
+        var lead = Lead.Create(request.FirstName, request.LastName, request.BusinessEmail, LeadSource.Website, assignedUser.Id);
+        lead.Phone = request.Phone;
+        lead.CompanyId = company.Id;
+        lead.JobTitle = request.InterestedProduct;
 
         _context.Leads.Add(lead);
 

@@ -39,14 +39,24 @@ export class EmailComposerComponent implements OnInit {
 
     this.generating = true;
     
-    // Simulate API call for AI generation
-    setTimeout(() => {
-      this.emailForm.patchValue({
-        subject: 'Enhance your engineering team\'s productivity',
-        body: `Hi there,\n\nI noticed your recent scaling efforts and thought SalesAI could help streamline your team's workflow. Our AI-driven platform reduces manual tasks by 40%.\n\nWould you be open to a brief 10-minute chat next Tuesday to see if it makes sense for your team?\n\nBest,\nOmar`
-      });
-      this.generating = false;
-    }, 1500);
+    // Call the actual AI email generation endpoint
+    this.apiService.post('/ai/email/generate', { 
+      recipientEmail: to, 
+      tone: this.emailForm.get('tone')?.value || 'professional'
+    }).subscribe({
+      next: (data: any) => {
+        this.emailForm.patchValue({
+          subject: data.subject || 'Automated Outreach',
+          body: data.body || data.content || ''
+        });
+        this.generating = false;
+      },
+      error: (err) => {
+        console.error('Failed to generate AI email:', err);
+        alert('Failed to generate AI email. Please check your API key.');
+        this.generating = false;
+      }
+    });
   }
 
   setTone(tone: string) {
@@ -61,11 +71,19 @@ export class EmailComposerComponent implements OnInit {
 
     this.sending = true;
     
-    // Simulate API call
-    setTimeout(() => {
-      alert('Email sent successfully!');
-      this.sending = false;
-      this.emailForm.reset({ tone: 'professional' });
-    }, 1000);
+    // Call the actual email sending endpoint
+    const payload = this.emailForm.value;
+    this.apiService.post('/outreach/email/send', payload).subscribe({
+      next: () => {
+        alert('Email sent successfully!');
+        this.sending = false;
+        this.emailForm.reset({ tone: 'professional' });
+      },
+      error: (err) => {
+        console.error('Failed to send email:', err);
+        alert('Failed to send email.');
+        this.sending = false;
+      }
+    });
   }
 }

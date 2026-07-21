@@ -22,6 +22,7 @@ interface SalesTask {
 export class TaskListComponent implements OnInit {
   tasks: SalesTask[] = [];
   loading = true;
+  error: string | null = null;
   activeTab: 'pending' | 'completed' = 'pending';
 
   constructor(private apiService: ApiService) {}
@@ -31,22 +32,17 @@ export class TaskListComponent implements OnInit {
   }
 
   loadTasks() {
+    this.loading = true;
+    this.error = null;
     this.apiService.get('/tasks').subscribe({
       next: (data: any) => {
-        this.tasks = data;
+        this.tasks = data.items || data || [];
         this.loading = false;
       },
-      error: () => {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-
-        this.tasks = [
-          { id: '1', title: 'Follow up on proposal', description: 'Check if they reviewed the pricing', dueDate: today.toISOString(), isCompleted: false, type: 'Call', relatedEntity: 'Deal: Enterprise License' },
-          { id: '2', title: 'Send outreach email', description: 'Use AI playbook template', dueDate: today.toISOString(), isCompleted: false, type: 'Email', relatedEntity: 'Lead: Jane Smith' },
-          { id: '3', title: 'Product Demo', description: 'Show the new reporting features', dueDate: tomorrow.toISOString(), isCompleted: false, type: 'Meeting', relatedEntity: 'Lead: Bob Johnson' },
-          { id: '4', title: 'Update CRM records', description: 'Clean up stale leads', dueDate: today.toISOString(), isCompleted: true, type: 'Todo', relatedEntity: 'General' }
-        ];
+      error: (err) => {
+        console.error('Failed to load tasks:', err);
+        this.error = 'Failed to load tasks.';
+        this.tasks = [];
         this.loading = false;
       }
     });
@@ -70,7 +66,15 @@ export class TaskListComponent implements OnInit {
   }
 
   toggleTaskCompletion(task: SalesTask) {
-    task.isCompleted = !task.isCompleted;
-    // this.apiService.put(`/tasks/${task.id}`, task).subscribe();
+    const newStatus = !task.isCompleted;
+    this.apiService.put(`/tasks/${task.id}/status`, { status: newStatus ? 'Completed' : 'Pending' }).subscribe({
+      next: () => {
+        task.isCompleted = newStatus;
+      },
+      error: (err) => {
+        console.error('Failed to update task status:', err);
+        alert('Failed to update task status.');
+      }
+    });
   }
 }

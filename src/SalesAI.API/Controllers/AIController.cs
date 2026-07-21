@@ -72,4 +72,21 @@ public class AIController : ControllerBase
 
         return Ok(result.Data);
     }
+
+    [HttpPost("email/generate")]
+    public async Task<IActionResult> GenerateStandaloneEmail([FromBody] GenerateStandaloneEmailRequest request)
+    {
+        var result = await _mediator.Send(new GenerateStandaloneEmailQuery(request.RecipientEmail, request.Tone ?? "Professional"));
+        
+        if (!result.Succeeded)
+            return BadRequest(new { result.Message });
+
+        return Ok(result.Data);
+    }
+}
+
+public class GenerateStandaloneEmailRequest
+{
+    public string RecipientEmail { get; set; } = string.Empty;
+    public string? Tone { get; set; }
 }

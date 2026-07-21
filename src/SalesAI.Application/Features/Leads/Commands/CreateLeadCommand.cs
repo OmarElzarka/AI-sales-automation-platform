@@ -47,21 +47,20 @@ public class CreateLeadCommandHandler : IRequestHandler<CreateLeadCommand, Resul
             return Result<Guid>.Failure("Invalid lead source.");
         }
 
-        var lead = new Lead
-        {
-            FirstName = request.FirstName,
-            LastName = request.LastName,
-            Email = request.Email.ToLowerInvariant(),
-            Phone = request.Phone,
-            CompanyId = request.CompanyId,
-            JobTitle = request.JobTitle,
-            Source = leadSource,
-            Status = LeadStatus.New,
-            AssignedToId = request.AssignedToId,
-            ScoreNumeric = 0
-        };
+        var lead = Lead.Create(request.FirstName, request.LastName, request.Email, leadSource, request.AssignedToId);
+        lead.Phone = request.Phone;
+        lead.CompanyId = request.CompanyId;
+        lead.JobTitle = request.JobTitle;
 
         _context.Leads.Add(lead);
+
+        // Add activity log
+        _context.Activities.Add(Activity.CreateForLead(
+            lead.Id,
+            ActivityType.Note,
+            "Lead Created",
+            $"New lead {lead.FullName} created from {leadSource}"));
+
         await _context.SaveChangesAsync(cancellationToken);
 
         return Result<Guid>.Success(lead.Id);

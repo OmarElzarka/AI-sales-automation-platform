@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { ApiService } from '../../../core/services/api.service';
 
 @Component({
@@ -16,10 +16,17 @@ import { ApiService } from '../../../core/services/api.service';
 export class LeadDetailComponent implements OnInit {
   leadId: string | null = null;
   lead: any = null;
+  timeline: any[] = [];
   loading = true;
+  error: string | null = null;
+  scoringInProgress = false;
+  emailGenerating = false;
+  playbookGenerating = false;
+  generatedEmail: any = null;
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private apiService: ApiService
   ) {}
 
@@ -27,52 +34,100 @@ export class LeadDetailComponent implements OnInit {
     this.leadId = this.route.snapshot.paramMap.get('id');
     if (this.leadId) {
       this.loadLeadDetails();
+      this.loadTimeline();
     }
   }
 
   loadLeadDetails() {
+    this.loading = true;
     this.apiService.get(`/leads/${this.leadId}`).subscribe({
       next: (data: any) => {
         this.lead = data;
         this.loading = false;
       },
-      error: () => {
-        // Mock data
-        this.lead = {
-          id: this.leadId,
-          firstName: 'John',
-          lastName: 'Doe',
-          email: 'john@acme.com',
-          jobTitle: 'VP of Engineering',
-          companyName: 'Acme Corp',
-          status: 'Qualified',
-          scoreCategory: 'Hot',
-          scoreNumeric: 95,
-          scoreReasoning: 'High intent shown based on recent product demo attendance and pricing page visits. Matches ICP perfectly.',
-          activities: [
-            { type: 'Meeting', title: 'Product Demo', date: new Date().toISOString() },
-            { type: 'Email', title: 'Sent pricing proposal', date: new Date(Date.now() - 86400000).toISOString() }
-          ],
-          aiPlaybook: null
-        };
+      error: (err) => {
+        console.error('Failed to load lead:', err);
+        this.error = 'Failed to load lead details.';
         this.loading = false;
       }
     });
   }
 
-  generatePlaybook() {
-    // Generate playbook via API
-    this.apiService.post(`/ai/leads/${this.leadId}/playbook`, {}).subscribe({
+  loadTimeline() {
+    this.apiService.get(`/leads/${this.leadId}/timeline`).subscribe({
       next: (data: any) => {
-        this.lead.aiPlaybook = data;
+        this.timeline = data || [];
       },
       error: () => {
-        this.lead.aiPlaybook = {
-          bestChannel: { channel: 'LinkedIn', reasoning: 'High activity on technical posts' },
-          salesApproach: { strategy: 'Value-based selling focusing on engineering efficiency', openingLine: 'Hi John, saw your recent post about scaling engineering teams...' },
-          expectedObjections: [{ objection: 'Too expensive', response: 'Focus on ROI and time saved per developer.' }]
-        };
+        this.timeline = [];
       }
     });
   }
+
+  scoreLead() {
+    this.scoringInProgress = true;
+    this.apiService.post(`/ai/leads/${this.leadId}/score`, {}).subscribe({
+      next: (data: any) => {
+        this.lead.scoreCategory = data.category;
+        this.lead.scoreNumeric = data.numericScore;
+        this.lead.scoreReasoning = data.reasoning;
+        this.scoringInProgress = false;
+        this.loadTimeline();
+      },
+      error: (err) => {
+        console.error('AI scoring failed:', err);
+        this.scoringInProgress = false;
+        alert('AI scoring failed. Check that the Gemini API key is configured.');
+      }
+    });
+  }
+
+  generateEmail() {
+    this.emailGenerating = true;
+    this.generatedEmail = null;
+    this.apiService.post(`/ai/leads/${this.leadId}/generate-email`, {}).subscribe({
+      next: (data: any) => {
+        this.generatedEmail = data;
+        this.emailGenerating = false;
+      },
+      error: (err) => {
+        console.error('Email generation failed:', err);
+        this.emailGenerating = false;
+        alert('Email generation failed. Check that the Gemini API key is configured.');
+      }
+    });
+  }
+
+  generatePlaybook() {
+    this.playbookGenerating = true;
+    this.apiService.post(`/ai/leads/${this.leadId}/playbook`, {}).subscribe({
+      next: (data: any) => {
+        this.lead.aiPlaybook = data;
+        this.playbookGenerating = false;
+      },
+      error: (err) => {
+        console.error('Playbook generation failed:', err);
+        this.playbookGenerating = false;
+        alert('Playbook generation failed. Check that the Gemini API key is configured.');
+      }
+    });
+  }
+
+  deleteLead() {
+    if (!confirm('Are you sure you want to delete this lead?')) return;
+    this.apiService.delete(`/leads/${this.leadId}`).subscribe({
+      next: () => this.router.navigate(['/leads']),
+      error: (err) => console.error('Delete failed:', err)
+    });
+  }
+
+  getScoreColor(category: string): string {
+    switch (category) {
+      case 'Hot': return 'bg-rose-100 text-rose-800 border-rose-200';
+      case 'Warm': return 'bg-amber-100 text-amber-800 border-amber-200';
+      case 'Cold': return 'bg-sky-100 text-sky-800 border-sky-200';
+      default: return 'bg-surface-100 text-surface-800 border-surface-200';
+    }
+  }
 }
+
