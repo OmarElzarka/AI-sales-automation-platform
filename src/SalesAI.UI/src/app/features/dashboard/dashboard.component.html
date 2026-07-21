@@ -1,1 +1,133 @@
-<p>dashboard works!</p>
+<div class="space-y-6">
+  <div class="flex items-center justify-between">
+    <h1 class="text-2xl font-semibold text-gray-900">Dashboard</h1>
+    <div class="flex space-x-2">
+      <button class="px-4 py-2 bg-white border rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50">
+        <mat-icon class="align-middle text-sm">filter_list</mat-icon> Filter
+      </button>
+      <button class="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm text-sm font-medium hover:bg-blue-700">
+        <mat-icon class="align-middle text-sm">download</mat-icon> Export
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="loading" class="flex justify-center p-12">
+    <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+  </div>
+
+  <ng-container *ngIf="!loading">
+    <!-- KPI Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <mat-card class="p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500">Total Leads</p>
+            <p class="text-3xl font-bold text-gray-900 mt-2">{{ kpis.totalLeads }}</p>
+          </div>
+          <div class="p-3 bg-blue-100 rounded-full">
+            <mat-icon class="text-blue-600">people</mat-icon>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center text-sm">
+          <span class="text-green-500 flex items-center font-medium"><mat-icon class="text-sm">arrow_upward</mat-icon> 12%</span>
+          <span class="text-gray-400 ml-2">from last month</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500">Active Deals</p>
+            <p class="text-3xl font-bold text-gray-900 mt-2">{{ kpis.activeDeals }}</p>
+          </div>
+          <div class="p-3 bg-indigo-100 rounded-full">
+            <mat-icon class="text-indigo-600">business_center</mat-icon>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center text-sm">
+          <span class="text-green-500 flex items-center font-medium"><mat-icon class="text-sm">arrow_upward</mat-icon> 5%</span>
+          <span class="text-gray-400 ml-2">from last month</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500">Win Rate</p>
+            <p class="text-3xl font-bold text-gray-900 mt-2">{{ kpis.winRate }}%</p>
+          </div>
+          <div class="p-3 bg-green-100 rounded-full">
+            <mat-icon class="text-green-600">emoji_events</mat-icon>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center text-sm">
+          <span class="text-red-500 flex items-center font-medium"><mat-icon class="text-sm">arrow_downward</mat-icon> 2%</span>
+          <span class="text-gray-400 ml-2">from last month</span>
+        </div>
+      </mat-card>
+
+      <mat-card class="p-6 rounded-xl shadow-sm hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between">
+          <div>
+            <p class="text-sm font-medium text-gray-500">Pipeline Value</p>
+            <p class="text-3xl font-bold text-gray-900 mt-2">${{ kpis.revenuePipeline | number }}</p>
+          </div>
+          <div class="p-3 bg-yellow-100 rounded-full">
+            <mat-icon class="text-yellow-600">monetization_on</mat-icon>
+          </div>
+        </div>
+        <div class="mt-4 flex items-center text-sm">
+          <span class="text-green-500 flex items-center font-medium"><mat-icon class="text-sm">arrow_upward</mat-icon> 18%</span>
+          <span class="text-gray-400 ml-2">from last month</span>
+        </div>
+      </mat-card>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+      <!-- Funnel Chart (Mocked with CSS) -->
+      <mat-card class="p-6 col-span-2 rounded-xl shadow-sm">
+        <h3 class="text-lg font-medium text-gray-900 mb-6">Pipeline Funnel</h3>
+        <div class="space-y-4">
+          <div *ngFor="let stage of funnel; let i = index" class="relative">
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-sm font-medium text-gray-700">{{ stage.stage }}</span>
+              <span class="text-sm text-gray-500">{{ stage.count }} Deals</span>
+            </div>
+            <div class="w-full bg-gray-200 rounded-full h-3">
+              <div class="bg-blue-600 h-3 rounded-full" [style.width.%]="(stage.count / funnel[0].count) * 100"></div>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+
+      <!-- Activity Feed -->
+      <mat-card class="p-6 rounded-xl shadow-sm">
+        <h3 class="text-lg font-medium text-gray-900 mb-6">Recent Activity</h3>
+        <div class="flow-root">
+          <ul class="-mb-8">
+            <li *ngFor="let activity of activities; let isLast = last">
+              <div class="relative pb-8">
+                <span *ngIf="!isLast" class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                <div class="relative flex space-x-3">
+                  <div>
+                    <span class="h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white" [ngClass]="getActivityColor(activity.type)">
+                      <mat-icon class="text-sm">{{ getActivityIcon(activity.type) }}</mat-icon>
+                    </span>
+                  </div>
+                  <div class="min-w-0 flex-1 pt-1 flex justify-between space-x-4">
+                    <div>
+                      <p class="text-sm text-gray-500">{{ activity.title }}</p>
+                    </div>
+                    <div class="text-right text-xs whitespace-nowrap text-gray-500">
+                      {{ activity.createdAt | date:'shortTime' }}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </div>
+      </mat-card>
+    </div>
+  </ng-container>
+</div>

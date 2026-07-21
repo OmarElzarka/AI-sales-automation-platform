@@ -1,1 +1,26 @@
-<p>sidebar works!</p>
+<div class="flex flex-col w-64 bg-gray-900 border-r border-gray-800">
+  <div class="flex items-center justify-center h-16 bg-gray-900 border-b border-gray-800">
+    <span class="text-white text-xl font-bold tracking-wider flex items-center gap-2">
+      <mat-icon class="text-blue-500">auto_awesome</mat-icon>
+      SalesAI
+    </span>
+  </div>
+  <div class="flex flex-col flex-1 overflow-y-auto">
+    <nav class="flex-1 px-4 py-6 space-y-2 bg-gray-900">
+      <a *ngFor="let item of navItems" 
+         [routerLink]="item.route" 
+         routerLinkActive="bg-gray-800 text-white"
+         [routerLinkActiveOptions]="{exact: false}"
+         class="flex items-center px-4 py-3 text-gray-300 rounded-lg hover:bg-gray-800 hover:text-white transition-colors duration-200">
+        <mat-icon class="mr-3">{{ item.icon }}</mat-icon>
+        <span class="font-medium">{{ item.label }}</span>
+      </a>
+    </nav>
+  </div>
+  <div class="p-4 border-t border-gray-800">
+    <button (click)="logout()" class="flex items-center w-full px-4 py-3 text-gray-400 rounded-lg hover:bg-gray-800 hover:text-white transition-colors duration-200">
+      <mat-icon class="mr-3">logout</mat-icon>
+      <span class="font-medium">Logout</span>
+    </button>
+  </div>
+</div>

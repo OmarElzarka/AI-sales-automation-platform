@@ -1,1 +1,127 @@
-<p>lead-detail works!</p>
+<div *ngIf="loading" class="flex justify-center p-12">
+  <div class="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+</div>
+
+<div *ngIf="!loading && lead" class="space-y-6 max-w-7xl mx-auto">
+  
+  <!-- Header Card -->
+  <mat-card class="p-6 rounded-xl shadow-sm border-t-4 border-blue-600">
+    <div class="flex justify-between items-start">
+      <div class="flex items-center gap-4">
+        <div class="h-16 w-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 text-2xl font-bold">
+          {{ lead.firstName[0] }}{{ lead.lastName[0] }}
+        </div>
+        <div>
+          <h1 class="text-3xl font-bold text-gray-900">{{ lead.firstName }} {{ lead.lastName }}</h1>
+          <p class="text-lg text-gray-600">{{ lead.jobTitle }} at <span class="font-medium text-gray-900">{{ lead.companyName }}</span></p>
+          <div class="flex items-center gap-4 mt-2 text-sm text-gray-500">
+            <span class="flex items-center gap-1"><mat-icon class="text-sm">email</mat-icon> {{ lead.email }}</span>
+            <span class="flex items-center gap-1 bg-green-100 text-green-800 px-2 py-0.5 rounded-full font-medium">{{ lead.status }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-2">
+        <button mat-stroked-button color="primary">Edit Lead</button>
+        <button mat-flat-button color="primary">Convert to Deal</button>
+      </div>
+    </div>
+  </mat-card>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left Column: Details & Timeline -->
+    <div class="col-span-2 space-y-6">
+      
+      <mat-card class="rounded-xl shadow-sm">
+        <mat-tab-group>
+          <mat-tab label="Timeline">
+            <div class="p-6 flow-root">
+              <ul class="-mb-8">
+                <li *ngFor="let activity of lead.activities; let isLast = last">
+                  <div class="relative pb-8">
+                    <span *ngIf="!isLast" class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                    <div class="relative flex space-x-3">
+                      <div>
+                        <span class="h-8 w-8 rounded-full bg-blue-100 flex items-center justify-center ring-8 ring-white">
+                          <mat-icon class="text-sm text-blue-600">event</mat-icon>
+                        </span>
+                      </div>
+                      <div class="min-w-0 flex-1 pt-1 flex justify-between space-x-4">
+                        <div>
+                          <p class="text-sm text-gray-800 font-medium">{{ activity.title }}</p>
+                          <p class="text-sm text-gray-500">{{ activity.type }}</p>
+                        </div>
+                        <div class="text-right text-xs whitespace-nowrap text-gray-500">
+                          {{ activity.date | date:'medium' }}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </mat-tab>
+          <mat-tab label="Notes">
+            <div class="p-6">
+              <textarea class="w-full border border-gray-300 rounded-lg p-3 text-sm focus:ring focus:border-blue-300" rows="4" placeholder="Add a note..."></textarea>
+              <div class="mt-2 flex justify-end">
+                <button mat-flat-button color="primary">Save Note</button>
+              </div>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </mat-card>
+
+    </div>
+
+    <!-- Right Column: AI Copilot Panel -->
+    <div class="col-span-1 space-y-6">
+      
+      <!-- AI Lead Score -->
+      <mat-card class="p-6 rounded-xl shadow-sm bg-gradient-to-br from-indigo-50 to-blue-50 border border-blue-100">
+        <div class="flex items-center gap-2 mb-4">
+          <mat-icon class="text-blue-600">auto_awesome</mat-icon>
+          <h3 class="text-lg font-bold text-gray-900">AI Lead Score</h3>
+        </div>
+        
+        <div class="flex items-end gap-3 mb-4">
+          <span class="text-5xl font-black text-gray-900">{{ lead.scoreNumeric }}</span>
+          <span class="px-3 py-1 bg-red-100 text-red-800 text-sm font-bold rounded-full mb-1">{{ lead.scoreCategory }}</span>
+        </div>
+        
+        <p class="text-sm text-gray-700 leading-relaxed">{{ lead.scoreReasoning }}</p>
+      </mat-card>
+
+      <!-- AI Playbook -->
+      <mat-card class="p-6 rounded-xl shadow-sm border border-gray-200">
+        <div class="flex items-center justify-between mb-4">
+          <div class="flex items-center gap-2">
+            <mat-icon class="text-purple-600">smart_toy</mat-icon>
+            <h3 class="text-lg font-bold text-gray-900">Sales Playbook</h3>
+          </div>
+          <button *ngIf="!lead.aiPlaybook" mat-button color="primary" (click)="generatePlaybook()">Generate</button>
+        </div>
+
+        <div *ngIf="!lead.aiPlaybook" class="text-center py-6 text-gray-500 text-sm">
+          No playbook generated yet. Click generate to analyze this lead and get actionable next steps.
+        </div>
+
+        <div *ngIf="lead.aiPlaybook" class="space-y-4">
+          <div>
+            <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Best Channel</h4>
+            <p class="text-sm text-gray-900 mt-1 font-medium">{{ lead.aiPlaybook.bestChannel.channel }}</p>
+            <p class="text-xs text-gray-600 mt-1">{{ lead.aiPlaybook.bestChannel.reasoning }}</p>
+          </div>
+          <mat-divider></mat-divider>
+          <div>
+            <h4 class="text-xs font-bold text-gray-500 uppercase tracking-wider">Suggested Approach</h4>
+            <p class="text-sm text-gray-900 mt-1">{{ lead.aiPlaybook.salesApproach.strategy }}</p>
+            <div class="mt-2 p-3 bg-gray-50 rounded border border-gray-200 text-sm italic text-gray-700">
+              "{{ lead.aiPlaybook.salesApproach.openingLine }}"
+            </div>
+          </div>
+        </div>
+      </mat-card>
+
+    </div>
+  </div>
+</div>
