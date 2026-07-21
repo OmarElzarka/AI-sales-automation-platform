@@ -73,4 +73,37 @@ public class LeadsController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpGet("duplicates")]
+    public async Task<ActionResult<List<LeadDto>>> GetDuplicates([FromQuery] GetPotentialDuplicateLeadsQuery query)
+    {
+        var result = await _mediator.Send(query);
+        
+        if (!result.Succeeded)
+            return BadRequest(new { result.Message });
+
+        return Ok(result.Data);
+    }
+
+    [HttpPost("import")]
+    public async Task<ActionResult<ImportLeadsResult>> ImportLeads(IFormFile file)
+    {
+        if (file == null || file.Length == 0)
+            return BadRequest(new { Message = "File is empty or not provided." });
+
+        using var memoryStream = new MemoryStream();
+        await file.CopyToAsync(memoryStream);
+        var fileBytes = memoryStream.ToArray();
+
+        var userIdString = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+        if (!Guid.TryParse(userIdString, out var assignedToId))
+            return Unauthorized();
+
+        var result = await _mediator.Send(new ImportLeadsCommand(fileBytes, assignedToId));
+
+        if (!result.Succeeded)
+            return BadRequest(new { result.Message, result.Errors });
+
+        return Ok(result.Data);
+    }
 }

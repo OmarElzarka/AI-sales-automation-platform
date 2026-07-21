@@ -76,6 +76,7 @@ public static class DependencyInjection
         services.AddScoped<IJwtTokenService, JwtTokenService>();
         services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
+        services.AddScoped<SalesAI.Application.Features.Leads.Services.ILeadDuplicateDetectionService, SalesAI.Application.Features.Leads.Services.LeadDuplicateDetectionService>();
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddSingleton<ICacheService, CacheService>();
         services.AddScoped<IEmailService, EmailService>();
