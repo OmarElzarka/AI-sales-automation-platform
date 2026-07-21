@@ -6,14 +6,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SalesAI.Domain.Entities;
 
-namespace SalesAI.Infrastructure.Identity;
+using SalesAI.Application.Common.Interfaces;
 
-public interface IJwtTokenService
-{
-    string GenerateAccessToken(User user);
-    string GenerateRefreshToken();
-    ClaimsPrincipal? GetPrincipalFromExpiredToken(string token);
-}
+namespace SalesAI.Infrastructure.Identity;
 
 public class JwtTokenService : IJwtTokenService
 {

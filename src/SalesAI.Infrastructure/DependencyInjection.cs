@@ -74,6 +74,7 @@ public static class DependencyInjection
 
         // Services
         services.AddScoped<IJwtTokenService, JwtTokenService>();
+        services.AddScoped<IPasswordHasher, PasswordHasher>();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         services.AddSingleton<IDateTimeProvider, DateTimeProvider>();
         services.AddSingleton<ICacheService, CacheService>();
