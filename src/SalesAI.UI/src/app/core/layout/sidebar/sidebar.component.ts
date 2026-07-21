@@ -15,8 +15,10 @@ export class SidebarComponent {
   navItems = [
     { label: 'Dashboard', icon: 'dashboard', route: '/dashboard' },
     { label: 'Leads', icon: 'people', route: '/leads' },
-    { label: 'Deals', icon: 'monetization_on', route: '/deals' },
+    { label: 'Deals', icon: 'view_kanban', route: '/deals' },
     { label: 'Tasks', icon: 'check_circle', route: '/tasks' },
+    { label: 'Outreach', icon: 'email', route: '/outreach' },
+    { label: 'Reports', icon: 'bar_chart', route: '/reports' },
   ];
 
   constructor(private authService: AuthService, private router: Router) {}

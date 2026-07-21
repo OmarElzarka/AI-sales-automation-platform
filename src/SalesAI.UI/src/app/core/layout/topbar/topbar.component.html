@@ -1,13 +1,36 @@
-<header class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm">
-  <div class="flex items-center">
-    <!-- Search Bar -->
-    <div class="relative">
+<header class="flex items-center justify-between px-6 py-4 bg-white border-b border-gray-200 shadow-sm relative z-50">
+  <div class="flex items-center w-1/2">
+    <!-- Global Search Bar -->
+    <div class="relative w-full max-w-lg">
       <span class="absolute inset-y-0 left-0 flex items-center pl-3">
         <mat-icon class="text-gray-400">search</mat-icon>
       </span>
       <input type="text" 
-             class="w-full py-2 pl-10 pr-4 text-gray-700 bg-gray-50 border rounded-lg focus:outline-none focus:ring focus:border-blue-300" 
-             placeholder="Search leads, deals, or contacts...">
+             [(ngModel)]="searchQuery"
+             (input)="onSearch()"
+             (blur)="closeSearch()"
+             class="w-full py-2 pl-10 pr-4 text-gray-700 bg-gray-50 border border-gray-200 rounded-lg focus:outline-none focus:bg-white focus:ring-2 focus:ring-blue-100 focus:border-blue-300 transition-all" 
+             placeholder="Search leads, deals, or contacts (Press '/' to focus)">
+             
+      <!-- Search Results Dropdown -->
+      <div *ngIf="showResults" class="absolute top-full left-0 right-0 mt-2 bg-white rounded-lg shadow-xl border border-gray-200 overflow-hidden">
+        <div class="p-2">
+          <h4 class="text-xs font-bold text-gray-500 uppercase px-3 py-2">Quick Results</h4>
+          <a *ngFor="let res of mockResults" [routerLink]="res.route" class="flex items-center justify-between p-3 hover:bg-gray-50 rounded-md cursor-pointer">
+            <div class="flex items-center gap-3">
+              <mat-icon class="text-gray-400 text-sm">{{ res.type === 'Lead' ? 'person' : 'monetization_on' }}</mat-icon>
+              <div>
+                <p class="text-sm font-medium text-gray-900">{{ res.name }}</p>
+                <p class="text-xs text-gray-500">{{ res.sub }}</p>
+              </div>
+            </div>
+            <span class="text-xs font-medium px-2 py-1 bg-gray-100 rounded text-gray-600">{{ res.type }}</span>
+          </a>
+        </div>
+        <div class="bg-gray-50 p-3 border-t border-gray-100 text-center">
+          <span class="text-xs text-blue-600 font-medium cursor-pointer hover:underline">View all results for "{{ searchQuery }}"</span>
+        </div>
+      </div>
     </div>
   </div>
 
