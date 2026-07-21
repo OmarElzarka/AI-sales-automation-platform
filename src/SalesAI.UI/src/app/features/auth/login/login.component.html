@@ -1,0 +1,48 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+  <mat-card class="w-full max-w-md p-8 shadow-xl rounded-2xl">
+    <div class="text-center mb-8">
+      <h2 class="text-3xl font-extrabold text-gray-900 tracking-tight">SalesAI Copilot</h2>
+      <p class="mt-2 text-sm text-gray-600">Sign in to access your dashboard</p>
+    </div>
+
+    <div *ngIf="error" class="bg-red-50 border-l-4 border-red-500 p-4 mb-6 rounded-md">
+      <div class="flex">
+        <div class="ml-3">
+          <p class="text-sm text-red-700">{{ error }}</p>
+        </div>
+      </div>
+    </div>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="space-y-6">
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Email address</mat-label>
+          <input matInput formControlName="email" type="email" placeholder="you@company.com" required>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('required')">Email is required</mat-error>
+          <mat-error *ngIf="loginForm.get('email')?.hasError('email')">Please enter a valid email</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <mat-form-field appearance="outline" class="w-full">
+          <mat-label>Password</mat-label>
+          <input matInput formControlName="password" type="password" required>
+          <mat-error *ngIf="loginForm.get('password')?.hasError('required')">Password is required</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div>
+        <button mat-flat-button color="primary" class="w-full py-2 text-lg rounded-lg" type="submit" [disabled]="loginForm.invalid || loading">
+          {{ loading ? 'Signing in...' : 'Sign in' }}
+        </button>
+      </div>
+    </form>
+
+    <div class="mt-6 text-center">
+      <p class="text-sm text-gray-600">
+        Don't have an account? 
+        <a routerLink="/register" class="font-medium text-blue-600 hover:text-blue-500">Sign up here</a>
+      </p>
+    </div>
+  </mat-card>
+</div>
