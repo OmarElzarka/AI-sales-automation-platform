@@ -23,7 +23,7 @@ public class GeminiAIService : IAIService
     private async Task<string> GenerateContentAsync(string prompt, CancellationToken ct)
     {
         var apiKey = _configuration["GeminiApi:ApiKey"];
-        var model = _configuration["GeminiApi:Model"] ?? "gemini-2.0-flash";
+        var model = _configuration["GeminiApi:Model"] ?? "gemini-flash-latest";
         
         // Return mock data if API key is not configured or is the default placeholder
         if (string.IsNullOrEmpty(apiKey) || apiKey == "YOUR_GEMINI_API_KEY_HERE")
