@@ -169,6 +169,26 @@ public class GeminiAIService : IAIService
             }";
         }
         
+        else if (prompt.Contains("Competitive Intelligence", StringComparison.OrdinalIgnoreCase))
+        {
+            return @"{
+                ""companySummary"": ""Acme Corp is a leading provider of innovative enterprise solutions, focusing on streamlining workflows and increasing productivity for large-scale operations."",
+                ""leadSummary"": ""John Doe is a proactive professional with a track record of driving operational efficiency. They frequently engage with content related to automation and scaling."",
+                ""leadScore"": 85,
+                ""leadTemperature"": ""Hot"",
+                ""leadQualification"": ""Highly qualified based on company size and recent engagement signals."",
+                ""buyingSignals"": [""Recent funding round"", ""Active job postings for automation roles"", ""Downloaded our whitepaper""],
+                ""potentialPainPoints"": [""Manual data entry bottleneck"", ""Siloed communication across departments"", ""Lack of real-time analytics""],
+                ""recommendedSalesStrategy"": ""Focus on ROI and time-to-value. Highlight our seamless integration capabilities."",
+                ""personalizedTalkingPoints"": [""Congrats on the recent Series B"", ""How are you currently handling cross-department workflows?""],
+                ""suggestedIceBreakers"": [""I saw your recent post about the challenges of scaling operations...""],
+                ""recommendedProductFeaturesToHighlight"": [""Automated Workflows"", ""Real-time Analytics Dashboard"", ""Zapier Integration""],
+                ""potentialObjections"": [""Implementation time"", ""Budget constraints in Q3""],
+                ""executiveSummary"": ""Acme Corp represents a high-value opportunity. John Doe is the ideal champion. Proceed with a value-driven demonstration of our automation capabilities."",
+                ""recommendedFollowUpActions"": [""Send personalized email highlighting ROI"", ""Connect on LinkedIn""]
+            }";
+        }
+        
         return "{}";
     }
 
@@ -343,5 +363,42 @@ public class GeminiAIService : IAIService
 
         var responseJson = await GenerateContentAsync(prompt, ct);
         return DeserializeWithFallback<SalesPlaybookResult>(responseJson, prompt);
+    }
+
+    public async Task<CompetitiveIntelligenceResult> GenerateCompetitiveIntelligenceAsync(CompetitiveIntelligenceContext context, CancellationToken ct = default)
+    {
+        var prompt = $@"
+        You are an expert AI Sales Strategist. You have received raw research data about a company and a lead.
+        Synthesize this data into a comprehensive Competitive Intelligence report for the Sales Representative.
+        
+        --- COMPANY RESEARCH ---
+        {context.WigoloCompanyResearch}
+        
+        --- LEAD RESEARCH ---
+        {context.WigoloLeadResearch}
+        
+        Return ONLY a JSON object that matches this schema exactly:
+        {{
+            ""companySummary"": ""string"",
+            ""leadSummary"": ""string"",
+            ""leadScore"": number (0-100),
+            ""leadTemperature"": ""Hot|Warm|Cold"",
+            ""leadQualification"": ""string"",
+            ""buyingSignals"": [""string""],
+            ""potentialPainPoints"": [""string""],
+            ""recommendedSalesStrategy"": ""string"",
+            ""personalizedTalkingPoints"": [""string""],
+            ""suggestedIceBreakers"": [""string""],
+            ""recommendedProductFeaturesToHighlight"": [""string""],
+            ""potentialObjections"": [""string""],
+            ""executiveSummary"": ""string"",
+            ""recommendedFollowUpActions"": [""string""]
+        }}
+        
+        If certain information cannot be confidently found in the research, state ""Information not publicly available"" rather than hallucinating.
+        ";
+
+        var responseJson = await GenerateContentAsync(prompt, ct);
+        return DeserializeWithFallback<CompetitiveIntelligenceResult>(responseJson, prompt);
     }
 }

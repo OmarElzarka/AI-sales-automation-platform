@@ -14,4 +14,7 @@ public record LeadDto(
     Guid? CompanyId,
     int? ScoreNumeric,
     DateTime CreatedAt,
-    DateTime? ModifiedAt);
+    DateTime? ModifiedAt,
+    string ResearchStatus,
+    string? CompetitiveIntelligenceJson = null,
+    string? EmailDraftJson = null);

@@ -24,6 +24,8 @@ export class LeadDetailComponent implements OnInit {
   playbookGenerating = false;
   researching = false;
   generatedEmail: any = null;
+  competitiveIntelligence: any = null;
+  pollTimeout: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -39,16 +41,42 @@ export class LeadDetailComponent implements OnInit {
     }
   }
 
-  loadLeadDetails() {
-    this.loading = true;
+  ngOnDestroy() {
+    if (this.pollTimeout) {
+      clearTimeout(this.pollTimeout);
+    }
+  }
+
+  loadLeadDetails(isPolling = false) {
+    if (!isPolling) this.loading = true;
     this.apiService.get(`/leads/${this.leadId}`).subscribe({
       next: (data: any) => {
         this.lead = data;
+        if (this.lead.competitiveIntelligenceJson) {
+          try {
+            this.competitiveIntelligence = JSON.parse(this.lead.competitiveIntelligenceJson);
+          } catch(e) {
+            console.error('Failed to parse competitive intelligence JSON', e);
+          }
+        }
+        
+        if (this.lead.emailDraftJson && !this.generatedEmail) {
+          try {
+            this.generatedEmail = JSON.parse(this.lead.emailDraftJson);
+          } catch(e) {
+            console.error('Failed to parse email draft JSON', e);
+          }
+        }
+        
+        if (this.lead.researchStatus === 'InProgress') {
+          this.pollTimeout = setTimeout(() => this.loadLeadDetails(true), 3000);
+        }
+
         this.loading = false;
       },
       error: (err) => {
         console.error('Failed to load lead:', err);
-        this.error = 'Failed to load lead details.';
+        if (!isPolling) this.error = 'Failed to load lead details.';
         this.loading = false;
       }
     });

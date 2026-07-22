@@ -14,6 +14,8 @@ public class Lead : AuditableEntity
     public string? LinkedInUrl { get; set; }
     public LeadStatus Status { get; set; } = LeadStatus.New;
     public LeadSource Source { get; set; } = LeadSource.Other;
+    public ResearchStatus ResearchStatus { get; set; } = ResearchStatus.NotStarted;
+    public string? CompetitiveIntelligenceJson { get; set; }
 
     // AI Score (denormalized for quick access)
     public LeadScoreCategory? ScoreCategory { get; set; }

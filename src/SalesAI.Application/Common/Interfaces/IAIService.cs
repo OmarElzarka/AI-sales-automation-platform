@@ -7,6 +7,7 @@ public interface IAIService
     Task<GeneratedEmailResult> GenerateEmailAsync(EmailGenerationContext context, CancellationToken ct = default);
     Task<MeetingSummaryResult> SummarizeMeetingAsync(MeetingSummaryContext context, CancellationToken ct = default);
     Task<SalesPlaybookResult> GeneratePlaybookAsync(PlaybookContext context, CancellationToken ct = default);
+    Task<CompetitiveIntelligenceResult> GenerateCompetitiveIntelligenceAsync(CompetitiveIntelligenceContext context, CancellationToken ct = default);
 }
 
 // === Context Models (Input) ===
@@ -124,3 +125,23 @@ public record TimingRecommendation(string DayOfWeek, string TimeRange, string Re
 public record ApproachRecommendation(string Strategy, string Reasoning, string OpeningLine);
 public record ObjectionResponse(string Objection, string Response);
 public record SuggestedAction(string Action, string Priority, string Timing);
+
+public record CompetitiveIntelligenceContext(
+    string WigoloCompanyResearch,
+    string WigoloLeadResearch);
+
+public record CompetitiveIntelligenceResult(
+    string CompanySummary,
+    string LeadSummary,
+    int LeadScore,
+    string LeadTemperature,
+    string LeadQualification,
+    List<string> BuyingSignals,
+    List<string> PotentialPainPoints,
+    string RecommendedSalesStrategy,
+    List<string> PersonalizedTalkingPoints,
+    List<string> SuggestedIceBreakers,
+    List<string> RecommendedProductFeaturesToHighlight,
+    List<string> PotentialObjections,
+    string ExecutiveSummary,
+    List<string> RecommendedFollowUpActions);

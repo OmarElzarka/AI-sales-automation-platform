@@ -62,7 +62,10 @@ public class GetLeadsWithPaginationQueryHandler : IRequestHandler<GetLeadsWithPa
                 lead.CompanyId,
                 lead.ScoreNumeric,
                 lead.CreatedAt,
-                lead.ModifiedAt))
+                lead.ModifiedAt,
+                lead.ResearchStatus.ToString(),
+                null,
+                null))
             .ToListAsync(cancellationToken);
 
         var paginatedList = new PaginatedList<LeadDto>(items, count, request.PageNumber, request.PageSize);

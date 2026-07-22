@@ -90,7 +90,8 @@ public enum AIContentType
     Email,
     MeetingSummary,
     Playbook,
-    LeadScore
+    LeadScore,
+    CompetitiveIntelligence
 }
 
 public enum ContactInquiryType

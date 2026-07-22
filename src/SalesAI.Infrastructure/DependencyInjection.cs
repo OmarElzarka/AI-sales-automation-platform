@@ -127,6 +127,7 @@ public static class DependencyInjection
         });
 
         services.AddHttpClient<IAIService, GeminiAIService>();
+        services.AddHttpClient<IWigoloService, WigoloService>();
 
         // MediatR
         services.AddMediatR(cfg =>

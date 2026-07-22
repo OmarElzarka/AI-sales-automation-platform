@@ -47,6 +47,7 @@ public class LeadDuplicateDetectionService : ILeadDuplicateDetectionService
                 lead.CompanyId,
                 lead.ScoreNumeric,
                 lead.CreatedAt,
-                lead.ModifiedAt)).ToList();
+                lead.ModifiedAt,
+                lead.ResearchStatus.ToString())).ToList();
     }
 }

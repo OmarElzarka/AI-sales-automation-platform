@@ -43,7 +43,18 @@ public class GetLeadByIdQueryHandler : IRequestHandler<GetLeadByIdQuery, Result<
             lead.CompanyId,
             lead.ScoreNumeric,
             lead.CreatedAt,
-            lead.ModifiedAt);
+            lead.ModifiedAt,
+            lead.ResearchStatus.ToString(),
+            _context.AIGeneratedContent
+                .Where(c => c.LeadId == lead.Id && c.Type == SalesAI.Domain.Enums.AIContentType.CompetitiveIntelligence)
+                .OrderByDescending(c => c.CreatedAt)
+                .Select(c => c.ContentJson)
+                .FirstOrDefault(),
+            _context.AIGeneratedContent
+                .Where(c => c.LeadId == lead.Id && c.Type == SalesAI.Domain.Enums.AIContentType.Email)
+                .OrderByDescending(c => c.CreatedAt)
+                .Select(c => c.ContentJson)
+                .FirstOrDefault());
 
         return Result<LeadDto>.Success(dto);
     }
